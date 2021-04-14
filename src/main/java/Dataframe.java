@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Dataframe {
 	public static void main(String[] args) {
 		Dataframe data = new Dataframe(20, 30);
-		data.printDataframe();
+		data.printDataframeFirstLines(50);
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -41,8 +41,8 @@ public class Dataframe {
 		System.out.println();
 	}
 	
-	private void printCore(int max) {
-		for (int i = 0; i < max; i++) {
+	private void printCore(int min, int max) {
+		for (int i = min; i < max; i++) {
 			System.out.print("["+i+"]\t\t");
 			for (int j = 0; j < dataframe.size(); j++) {
 				if(dataframe.get(j).column.size() > i)
@@ -56,18 +56,18 @@ public class Dataframe {
 	
 	public void printDataframe() {
 		printHeader();
-		printCore(getMaxSeries());
+		printCore(0, getMaxSeries());
 	}
 	
 	public void printDataframeFirstLines(int nb) {
 		int max = getMaxSeries();
 		printHeader();
-		printCore(nb > max ? max : nb);
+		printCore(0, nb > max ? max : nb);
 	}
 	
 	public void printDataframeLastLines(int nb) {
 		int max = getMaxSeries();
 		printHeader();
-		
+		printCore(nb < max ? max - nb : 0, max);
 	}
 }
