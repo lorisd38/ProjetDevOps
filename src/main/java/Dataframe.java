@@ -1,10 +1,9 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Dataframe {
 	public static void main(String[] args) {
 		Dataframe data = new Dataframe();
-		data.AffichageDataframe();
+		data.printDataframe();
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -21,21 +20,27 @@ public class Dataframe {
 		
 		Series<Integer> serie2 = new Series<>();
 		serie2.name = "TestInt";
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 30; i++) {
 			serie2.column.add(i);
 		}
 		dataframe.add(serie2);
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public void AffichageDataframe() {
+	private int getMaxSeries() {
 		int max = 0;
 		for (Series series : dataframe) {
-			if (series.column.size() > max) max = series.column.size(); 
-			System.out.print(series.name + "\t\t");
+			if (series.column.size() > max) max = series.column.size();
 		}
+		return max;
+	}
+	
+	private void printHeader() {
+		for (Series series : dataframe) 
+			System.out.print(series.name + "\t\t");
 		System.out.println();
-		
+	}
+	
+	private void printCore(int max) {
 		for (int i = 0; i < max; i++) {
 			for (int j = 0; j < dataframe.size(); j++) {
 				if(dataframe.get(j).column.size() > i)
@@ -45,14 +50,20 @@ public class Dataframe {
 			}
 			System.out.println();
 		}
-		System.out.println();
 	}
 	
-	public void AffichageDataframePremieresLignes(int nb) {
-		
+	public void printDataframe() {
+		printHeader();
+		printCore(getMaxSeries());
 	}
 	
-	public void AffichageDataframeDernieresLignes(int nb) {
+	public void printDataframeFirstLines(int nb) {
+		int max = getMaxSeries();
+		printHeader();
+		printCore(nb > max ? max : nb);
+	}
+	
+	public void printDataframeLastLines(int nb) {
 		
 	}
 }
