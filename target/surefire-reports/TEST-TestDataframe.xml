@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="FR"/>
     <property name="sun.boot.library.path" value="C:\Users\Loris\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_15.0.2.v20210201-0955\jre\bin"/>
-    <property name="sun.java.command" value="C:\Users\Loris\AppData\Local\Temp\surefire11994597021401993820\surefirebooter16835123836316099732.jar C:\Users\Loris\AppData\Local\Temp\surefire11994597021401993820 2021-04-14T08-19-55_671-jvmRun1 surefire13906268494157335259tmp surefire_013420109677056910531tmp"/>
+    <property name="sun.java.command" value="C:\Users\Loris\AppData\Local\Temp\surefire15558197724019775970\surefirebooter5660408630140299418.jar C:\Users\Loris\AppData\Local\Temp\surefire15558197724019775970 2021-04-14T10-07-43_351-jvmRun1 surefire10674149598804615006tmp surefire_013998836300649136436tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="D:\Desktop\UGA\Master Info - GI\M1\S8\devops\projet-devops\target\test-classes;D:\Desktop\UGA\Master Info - GI\M1\S8\devops\projet-devops\target\classes;C:\Users\Loris\.m2\repository\junit\junit\4.13\junit-4.13.jar;C:\Users\Loris\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Loris\AppData\Local\Temp\surefire11994597021401993820\surefirebooter16835123836316099732.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Loris\AppData\Local\Temp\surefire15558197724019775970\surefirebooter5660408630140299418.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="15.0.2+7-27"/>
@@ -55,5 +55,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="59.0"/>
   </properties>
-  <testcase name="test" classname="TestDataframe" time="0.001"/>
+  <testcase name="test" classname="TestDataframe" time="0.002"/>
 </testsuite>
