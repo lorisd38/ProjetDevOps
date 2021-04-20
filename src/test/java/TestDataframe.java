@@ -16,7 +16,7 @@ public class TestDataframe {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		d = new Dataframe();
-		PATH = "src/test/ressources/test.csv";
+		PATH = "src/test/resources/test.csv";
 	}
 
 	@AfterClass
@@ -32,7 +32,6 @@ public class TestDataframe {
 			}
 			fw.append("\n");
 		}
-
 		fw.close();
 	}
 
@@ -86,7 +85,7 @@ public class TestDataframe {
 				all[i + 1] = toAdd;
 			}
 
-			String[][] tab = d.toTab("src/test/ressources/test.csv");
+			String[][] tab = d.toTab(PATH);
 			for (int i = 0; i < 201; i++) {
 				for (int j = 0; j < 3; j++) {
 					assertEquals(" verification a l'indice " + i + "" + j + ".", all[i][j], tab[i][j]);
