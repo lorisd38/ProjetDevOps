@@ -15,7 +15,7 @@ public class Series<E> {
 	}
 	
 	public Series(String name, ArrayList<E> l) {
-		this.name = "";
+		this.name = name;
 		this.column = l;
 	}
 	

@@ -1,12 +1,16 @@
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Dataframe {
 	public static void main(String[] args) {
-		Object[][] tab = {{"Tab1", 1,2,3,4}, {"Tab2", 2, 2, 3}};
+		Object[][] tab = {{"B", 3,6,9,2,5,8,1,4,7,0}, {"A", 1.5,4.1,7.6,2.3,5.1,8.7,3.9,6.5,9.1,1.5}, {"C","a","f","c","b","r","e","t","y","z","q"}};
 		Dataframe data;
 		try {
 			data = new Dataframe(tab);
-			data.getSdEachColumn().afficheDataframe();
+			data.afficheDataframe();
+			System.out.println("=================");
+			data.splitPercent_SortedData(34).afficheDataframe();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -32,14 +36,14 @@ public class Dataframe {
 					ajoutColonne("String", c);
 				else if (elem instanceof Integer)
 					ajoutColonne("Integer", c);
-				else if (elem instanceof Float)
-					ajoutColonne("Float", c);
+				else if (elem instanceof Double)
+					ajoutColonne("Double", c);
 				//rajouter un else on renvoie une erreur (type non supporte)
 			}
 		}
 	}
 	
-	 private void ajoutColonne(String type, Object[] c) {
+	private void ajoutColonne(String type, Object[] c) {
         switch (type) {
             case "String":
                 Series<String> s = new Series<>();
@@ -58,10 +62,10 @@ public class Dataframe {
                 dataframe.add(si);
                 break;
             default:
-                Series<Float> sf = new Series<>();
+                Series<Double> sf = new Series<>();
                 for (int i = 0; i < c.length; i ++) {
                     if (i == 0) sf.setName((String)c[0]);
-                    else sf.add((Float)c[i]);
+                    else sf.add((Double)c[i]);
                 }
                 dataframe.add(sf);
         }
@@ -80,13 +84,13 @@ public class Dataframe {
 		}
 	}
 	
-	public float getMeanColumn(int index) {
+	public double getMeanColumn(int index) {
 		if(index < dataframe.size()) {
 			Series<?> s = dataframe.get(index);
 			float mean = 0;
 			for (int i = 0; i < s.getSize(); i++) {
-				if (s.getElem(i) instanceof Float)
-					mean += (Float) s.getElem(i);
+				if (s.getElem(i) instanceof Double)
+					mean += (Double) s.getElem(i);
 				else if (s.getElem(i) instanceof Integer)
 					mean += (Integer) s.getElem(i);
 			}
@@ -99,7 +103,7 @@ public class Dataframe {
 	public Dataframe getMeanEachColumn() {
 		Dataframe dataframe_mean = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
-			Series<Float> serie_mean = new Series<>();
+			Series<Double> serie_mean = new Series<>();
 			serie_mean.setName(dataframe.get(i).getName());
 			serie_mean.getColumn().add(getMeanColumn(i));
 			dataframe_mean.ajoutSeries(serie_mean);
@@ -107,18 +111,18 @@ public class Dataframe {
 		return dataframe_mean;
 	}
 	
-	public float getMaxColumn(int index) {
+	public double getMaxColumn(int index) {
 		if(index < dataframe.size()) {
 			Series<?> s = dataframe.get(index);
-			float max = 0;
-			if (s.getSize() > 0 && s.getElem(0) instanceof Float)
-				max = (Float) s.getElem(0);
+			double max = 0;
+			if (s.getSize() > 0 && s.getElem(0) instanceof Double)
+				max = (Double) s.getElem(0);
 			else if (s.getSize() > 0 && s.getElem(0) instanceof Integer)
 				max = (Integer) s.getElem(0);
 			
 			for (int i = 0; i < s.getSize(); i++) {
-				if (s.getElem(i) instanceof Float)
-					max = max > (Float) s.getElem(i) ? max : (Float) s.getElem(i);
+				if (s.getElem(i) instanceof Double)
+					max = max > (Double) s.getElem(i) ? max : (Double) s.getElem(i);
 				else if (s.getElem(i) instanceof Integer)
 					max = max > (Integer) s.getElem(i) ? max : (Integer) s.getElem(i);
 			}
@@ -131,7 +135,7 @@ public class Dataframe {
 	public Dataframe getMaxEachColumn() {
 		Dataframe dataframe_max = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
-			Series<Float> serie_max = new Series<>();
+			Series<Double> serie_max = new Series<>();
 			serie_max.setName(dataframe.get(i).getName());
 			serie_max.getColumn().add(getMaxColumn(i));
 			dataframe_max.ajoutSeries(serie_max);
@@ -139,18 +143,18 @@ public class Dataframe {
 		return dataframe_max;
 	}
 	
-	public float getMinColumn(int index) {
+	public double getMinColumn(int index) {
 		if(index < dataframe.size()) {
 			Series<?> s = dataframe.get(index);
-			float min = 0;
-			if (s.getSize() > 0 && s.getElem(0) instanceof Float)
-				min = (Float) s.getElem(0);
+			double min = 0;
+			if (s.getSize() > 0 && s.getElem(0) instanceof Double)
+				min = (Double) s.getElem(0);
 			else if (s.getSize() > 0 && s.getElem(0) instanceof Integer)
 				min = (Integer) s.getElem(0);
 			
 			for (int i = 0; i < s.getSize(); i++) {
-				if (s.getElem(i) instanceof Float)
-					min = min < (Float) s.getElem(i) ? min : (Float) s.getElem(i);
+				if (s.getElem(i) instanceof Double)
+					min = min < (Double) s.getElem(i) ? min : (Double) s.getElem(i);
 				else if (s.getElem(i) instanceof Integer)
 					min = min < (Integer) s.getElem(i) ? min : (Integer) s.getElem(i);
 			}
@@ -163,7 +167,7 @@ public class Dataframe {
 	public Dataframe getMinEachColumn() {
 		Dataframe dataframe_max = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
-			Series<Float> serie_max = new Series<>();
+			Series<Double> serie_max = new Series<>();
 			serie_max.setName(dataframe.get(i).getName());
 			serie_max.getColumn().add(getMinColumn(i));
 			dataframe_max.ajoutSeries(serie_max);
@@ -171,18 +175,18 @@ public class Dataframe {
 		return dataframe_max;
 	}
 	
-	public float getSdColumn(int index) {
+	public double getSdColumn(int index) {
 		if(index < dataframe.size()) {
 			Series<?> s = dataframe.get(index);
-			float mean = getMinColumn(index);
-			float standardDeviation  = 0;
+			double mean = getMinColumn(index);
+			double standardDeviation  = 0;
 			for (int i = 0; i < s.getSize(); i++) {
-				if (s.getElem(i) instanceof Float)
-					standardDeviation  += Math.pow((Float) s.getElem(i) - mean, 2);
+				if (s.getElem(i) instanceof Double)
+					standardDeviation  += Math.pow((Double) s.getElem(i) - mean, 2);
 				else if (s.getElem(i) instanceof Integer)
 					standardDeviation  += Math.pow((Integer) s.getElem(i) - mean, 2);
 			}
-			return (float) Math.sqrt(standardDeviation  / s.getSize());
+			return (double) Math.sqrt(standardDeviation  / s.getSize());
 		} else {
 			return -1;//TODO Exception
 		}
@@ -191,7 +195,7 @@ public class Dataframe {
 	public Dataframe getSdEachColumn() {
 		Dataframe dataframe_max = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
-			Series<Float> serie_max = new Series<>();
+			Series<Double> serie_max = new Series<>();
 			serie_max.setName(dataframe.get(i).getName());
 			serie_max.getColumn().add(getSdColumn(i));
 			dataframe_max.ajoutSeries(serie_max);
@@ -199,5 +203,28 @@ public class Dataframe {
 		return dataframe_max;
 	}
 
-	
+	public Dataframe splitPercent_SortedData(double percent) {
+		if(percent < 0 || percent > 100) //TODO Exception 
+			return null;
+		Dataframe dataframeSplited = new Dataframe();
+		for (int i = 0; i < dataframe.size(); i++) {
+			Series<?> s = dataframe.get(i);
+			//On trie par ordre croissant
+			List<Object> ssorted = s.getColumn().stream().sorted().collect(Collectors.toList());
+			//On creee 2 nouvelles listes
+			ArrayList<Object> sStart = new ArrayList<>();
+			ArrayList<Object> sEnd = new ArrayList<>();
+			//On recupere le nombre de valeurs qu'on devra copier
+			int limit = (int) Math.floor(ssorted.size() * (percent/100));
+			//On copie les valeurs
+			for (int j = 0; j < limit; j++) {
+				sStart.add(ssorted.get(j));
+				sEnd.add(ssorted.get(ssorted.size()-limit+j));
+			}
+			//On ajoute les deux nouvelles Series
+			dataframeSplited.ajoutSeries((new Series<>(s.getName()+"_FIRST", sStart)));
+			dataframeSplited.ajoutSeries((new Series<>(s.getName()+"_LAST", sEnd)));
+		}
+		return dataframeSplited;
+	}
 }
