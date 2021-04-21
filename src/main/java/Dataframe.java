@@ -1,73 +1,126 @@
 import java.util.ArrayList;
 
 public class Dataframe {
+	
+	
 	public static void main(String[] args) {
-		Dataframe data = new Dataframe(20, 30);
-		data.printDataframeFirstLines(50);
-	}
+        Object[][] tab = {{"Tab1", 1,2,3,4}, {"Tab2"}};
+        Dataframe data;
+        try {
+            data = new Dataframe(tab);
+            data.afficheDataframe();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @SuppressWarnings("rawtypes")
+    ArrayList<Series> dataframe;
+    
+    public Dataframe(Object[][] tableau) throws Exception {
+        if (tableau == null || tableau.length == 0)
+            throw new Exception();
+        this.dataframe = new ArrayList<>();
+        for (int i = 0; i < tableau.length; i ++) {
+            Object[] c = tableau[i];
+            if (c.length == 1)
+                dataframe.add(new Series<>((String)c[0]));
+            else if (c.length > 1) {
+                Object elem = c[1];
+                if (elem instanceof String)
+                    ajoutColonne("String", c);
+                else if (elem instanceof Integer)
+                    ajoutColonne("Integer", c);
+                else if (elem instanceof Float)
+                    ajoutColonne("Float", c);
+                //rajouter un else on renvoie une erreur (type non supporte)
+            }
+        }
+    }
+    
+    private void ajoutColonne(String type, Object[] c) {
+        switch (type) {
+            case "String":
+                Series<String> s = new Series<>();
+                for (int i = 0; i < c.length; i ++) {
+                    if (i == 0) s.setName((String)c[0]);
+                    else s.add((String)c[i]);
+                }
+                dataframe.add(s);
+                break;
+            case "Integer":
+                Series<Integer> si = new Series<>();
+                for (int i = 0; i < c.length; i ++) {
+                    if (i == 0) si.setName((String)c[0]);
+                    else si.add((Integer)c[i]);
+                }
+                dataframe.add(si);
+                break;
+            default:
+                Series<Float> sf = new Series<>();
+                for (int i = 0; i < c.length; i ++) {
+                    if (i == 0) sf.setName((String)c[0]);
+                    else sf.add((Float)c[i]);
+                }
+                dataframe.add(sf);
+        }
+    }
 	
-	@SuppressWarnings("rawtypes")
-	ArrayList<Series> dataframe;
 	
-	public Dataframe(int size1, int size2) {
-		dataframe = new ArrayList<>();
-		Series<String> serie = new Series<>();
-		serie.name = "TestStr";
-		for (int i = 0; i < size1; i++) {
-			serie.column.add("test"+i);
-		}
-		dataframe.add(serie);
-		
-		Series<Integer> serie2 = new Series<>();
-		serie2.name = "TestInt";
-		for (int i = 0; i < size2; i++) {
-			serie2.column.add(i);
-		}
-		dataframe.add(serie2);
-	}
-	
-	private int getMaxSeries() {
+	public int getMaxSizeSeries() {
 		int max = 0;
 		for (Series series : dataframe) {
-			if (series.column.size() > max) max = series.column.size();
+			if (series.getColumn().size() > max) max = series.getColumn().size();
 		}
 		return max;
 	}
 	
-	private void printHeader() {
-		System.out.print("Index\t\t");
+	
+	private String printHeader() {
+		String out;
+		out = "Index\t\t";
 		for (Series series : dataframe) 
-			System.out.print(series.name + "\t\t");
-		System.out.println();
+			out += series.getName() + "\t\t";
+		out += "\n";
+		return out;
 	}
 	
-	private void printCore(int min, int max) {
+	private String printCore(int min, int max) {
+		String out="";
 		for (int i = min; i < max; i++) {
-			System.out.print("["+i+"]\t\t");
+			out += "["+i+"]\t\t";
 			for (int j = 0; j < dataframe.size(); j++) {
-				if(dataframe.get(j).column.size() > i)
-					System.out.print(dataframe.get(j).column.get(i)+"\t\t");
+				if(dataframe.get(j).getColumn().size() > i)
+					out += dataframe.get(j).getColumn().get(i)+"\t\t";
 				else
-					System.out.print("\t\t");
+					out += ("\t\t");
 			}
-			System.out.println();
+			out += "\n";
 		}
+		return out;
 	}
 	
-	public void printDataframe() {
-		printHeader();
-		printCore(0, getMaxSeries());
+	public String printDataframe() {
+		return printHeader()+printCore(0, getMaxSizeSeries());
 	}
 	
-	public void printDataframeFirstLines(int nb) {
-		int max = getMaxSeries();
-		printHeader();
-		printCore(0, nb > max ? max : nb);
+	public String printDataframeFirstLines(int nb) {
+		int max = getMaxSizeSeries();
+		return printHeader() + printCore(0, nb > max ? max : nb) ;
 	}
 	
-	public void printDataframeLastLines(int nb) {
-		int max = getMaxSeries();
-		printHeader();
-		printCore(nb < max ? max - nb : 0, max);
+	public String printDataframeLastLines(int nb) {
+		int max = getMaxSizeSeries();
+		return printHeader() + printCore(nb < max ? max - nb : 0, max);
 	}
+	
+	public void afficheDataframe() {
+        for (Series<?> s : dataframe) {
+            System.out.print(s.getName() + "\t");
+            for (Object o : s.getColumn())
+                System.out.print(o + "\t");
+            System.out.println();
+        }
+        System.out.println();
+    }
 }
