@@ -12,6 +12,7 @@ public class Dataframe {
 	protected final int MAX_VALUES = 10000;
 	private String splitter = " ";
 	protected final String STRING = "String";
+	private String VIRGULE = ",";
 
 	protected Dataframe() {
 		this.splitter = ";";
@@ -33,13 +34,14 @@ public class Dataframe {
 
 	protected String ajout(String name, String[] listeObjet) {
 		String valeur = listeObjet[0];
-		if (valeur.matches("-?\\d+"))
+		if (isInt(valeur))
 			return INTEGER;
 
-		if (valeur.contains("."))
+		if (isFloat(valeur))
 			return FLOAT;
 
 		return STRING;
+
 	}
 
 	protected Series ajouterTout(Series s, String[][] arguments, int position) {
@@ -58,7 +60,7 @@ public class Dataframe {
 	 *
 	 */
 	protected void initialisation(String[][] arguments) {
-		dataframe = new ArrayList();
+		dataframe = new ArrayList<>();
 		for (int i = 0; i < arguments.length; i++) {
 			String name = getName(arguments, i);
 			Series s = null;
@@ -81,6 +83,16 @@ public class Dataframe {
 			s = ajouterTout(s, arguments, i);
 			dataframe.add(s);
 		}
+	}
+
+	protected boolean isFloat(String valeur) {
+		String[] all = valeur.split(VIRGULE);
+
+		return all.length == 2 && isInt(all[0]) && isInt(all[1]);
+	}
+
+	protected boolean isInt(String valeur) {
+		return valeur.matches("-?\\d+");
 	}
 
 	private String[] nextLine(String line) throws TooManyDataException {
