@@ -3,8 +3,6 @@ import static org.junit.Assert.*;
 import java.io.FileWriter;
 import java.io.IOException;
 
-//import java.io.FileWriter;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
