@@ -4,7 +4,6 @@ import java.util.ArrayList;
 public class Dataframe {
 	private ArrayList<Series> dataframe;
 	
-	//TODO gerer les exceptions
 	public Dataframe(Object[][] tableau) throws Exception {
 		if (tableau == null || tableau.length == 0)
 			throw new Exception();
@@ -21,12 +20,12 @@ public class Dataframe {
 					ajoutColonne("Integer", c);
 				else if (elem instanceof Float)
 					ajoutColonne("Float", c);
-				//rajouter un else on renvoie une erreur (type non supporte)
+				else
+					throw new Exception();
 			}
 		}
 	}
 
-	//TODO gerer les exceptions
 	private void ajoutColonne(String type, Object[] c) {
 		switch (type) {
 			case "String":
@@ -53,16 +52,6 @@ public class Dataframe {
 				}
 				dataframe.add(sf);
 		}
-	}
-	
-	public void afficheDataframe() {
-		for (Series s : dataframe) {
-			System.out.print(s.getName() + "\t");
-			for (Object o : s.getColumn())
-				System.out.print(o + "\t");
-			System.out.println();
-		}
-		System.out.println();
 	}
 	
 	public ArrayList<Series> getDataframe() {
