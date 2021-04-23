@@ -17,7 +17,7 @@ public class TestDataframe {
 	@Before
 	public void setUpBefore() throws Exception {
 		data = new Object[nbColonnes][nbLignes + 1];
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < nbColonnes; i++) {
 			if (i == 0) {
 				data[0][i] = "A";
 				data[1][i] = "B";
