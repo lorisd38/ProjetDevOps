@@ -1,7 +1,11 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileWriter;
 import java.io.IOException;
+
+//import java.io.FileWriter;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -10,7 +14,7 @@ import org.junit.Test;
 public class TestDataframe {
 	static Dataframe d;
 	private static String PATH;
-	
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		d = new Dataframe();
@@ -36,11 +40,11 @@ public class TestDataframe {
 	@Test
 	public void testAjout() {
 		String[] listeInt = { "1", "2", "3" };
-		assertEquals(d.ajout("coucou", listeInt), d.INTEGER);
+		assertEquals(d.ajout("forTest", listeInt), d.INTEGER);
 		String[] listeString = { "a", "b", "b" };
-		assertEquals(d.ajout("coucou", listeString), d.STRING);
-		String[] listeFloat = { "0.1", "0.2", "0.2" };
-		assertEquals(d.ajout("coucou", listeFloat), d.FLOAT);
+		assertEquals(d.ajout("forTest", listeString), d.STRING);
+		String[] listeFloat = { "0,1", "0,2", "0,2" };
+		assertEquals(d.ajout("forTest", listeFloat), d.FLOAT);
 	}
 
 	@Test(expected = TooManyDataException.class)
@@ -68,7 +72,27 @@ public class TestDataframe {
 			assertEquals(contenu[i], d.getName(all, i));
 		}
 	}
-	
+
+	@Test
+	public void testIsFloat() throws Exception {
+		String s = "0";
+		assertFalse(d.isFloat(s));
+		s = "0,2";
+		assertTrue(d.isFloat(s));
+		s = "BLABLA";
+		assertFalse(d.isFloat(s));
+	}
+
+	@Test
+	public void testIsInt() throws Exception {
+		String s = "0";
+		assertTrue(d.isInt(s));
+		s = "0,2";
+		assertFalse(d.isInt(s));
+		s = "Test";
+		assertFalse(d.isInt(s));
+	}
+
 	@Test
 	public void testToTab() {
 		try {
