@@ -6,11 +6,11 @@ import org.junit.Test;
 
 public class TestDataframe {
 
-	@BeforeClass
+	@Before
 	public static void setUpBefore() throws Exception {
 	}
 
-	@AfterClass
+	@After
 	public static void tearDownAfter() throws Exception {
 	}
 
