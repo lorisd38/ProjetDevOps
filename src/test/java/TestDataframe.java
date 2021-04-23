@@ -5,24 +5,22 @@ import static org.junit.Assert.assertTrue;
 import java.io.FileWriter;
 import java.io.IOException;
 
-//import java.io.FileWriter;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class TestDataframe {
 	static Dataframe d;
 	private static String PATH;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	@Before
+	public static void setUpBefore() throws Exception {
 		d = new Dataframe();
 		PATH = "src/test/resources/test.csv";
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
+	@After
+	public static void tearDownAfter() throws Exception {
 	}
 
 	private void remplirFile(int largeur, int hauteur, String PATH) throws IOException {
