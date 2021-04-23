@@ -1,17 +1,17 @@
 import static org.junit.Assert.*;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class TestDataframe {
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	public static void setUpBefore() throws Exception {
 	}
 
 	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
+	public static void tearDownAfter() throws Exception {
 	}
 
 	@Test
