@@ -10,17 +10,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TestDataframe {
-	static Dataframe d;
+	private Dataframe d;
 	private static String PATH;
 
 	@Before
-	public static void setUpBefore() throws Exception {
+	public void setUpBefore() throws Exception {
 		d = new Dataframe();
 		PATH = "src/test/resources/test.csv";
 	}
 
 	@After
-	public static void tearDownAfter() throws Exception {
+	public void tearDownAfter() throws Exception {
 	}
 
 	private void remplirFile(int largeur, int hauteur, String PATH) throws IOException {
