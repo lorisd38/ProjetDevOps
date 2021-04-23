@@ -15,7 +15,7 @@ public class TestDataframe {
 	private static final int nbLignes = 8;
 
 	@Before
-	public static void setUpBefore() throws Exception {
+	public void setUpBefore() throws Exception {
 		data = new Object[nbColonnes][nbLignes + 1];
 		for (int i = 0; i < 6; i++) {
 			if (i == 0) {
@@ -42,7 +42,7 @@ public class TestDataframe {
 	}
 
 	@After
-	public static void tearDownAfter() throws Exception {
+	public void tearDownAfter() throws Exception {
 	}
 
 	@Test
