@@ -38,22 +38,22 @@ public class TestDataframe {
 	@Test
 	public void testAjout() {
 		String[] listeInt = { "1", "2", "3" };
-		assertEquals(d.ajout("forTest", listeInt), d.INTEGER);
+		assertEquals(d.type(listeInt), d.INTEGER);
 		String[] listeString = { "a", "b", "b" };
-		assertEquals(d.ajout("forTest", listeString), d.STRING);
+		assertEquals(d.type(listeString), d.STRING);
 		String[] listeFloat = { "0,1", "0,2", "0,2" };
-		assertEquals(d.ajout("forTest", listeFloat), d.FLOAT);
+		assertEquals(d.type(listeFloat), d.FLOAT);
 	}
 
 	@Test(expected = TooManyDataException.class)
 	public void testAjoutTropGrand() throws Exception {
-		remplirFile(d.MAX_DATA, d.MAX_VALUES - 1, PATH);
+		remplirFile(PandaExceptions.MAX_DATA, PandaExceptions.MAX_VALUES - 1, PATH);
 		d.toTab(PATH);
 	}
 
 	@Test(expected = TooManyValueException.class)
 	public void testAjoutTropLarge() throws Exception {
-		remplirFile(d.MAX_DATA - 1, d.MAX_VALUES, PATH);
+		remplirFile(PandaExceptions.MAX_DATA - 1, PandaExceptions.MAX_VALUES, PATH);
 		d.toTab(PATH);
 	}
 
@@ -111,10 +111,9 @@ public class TestDataframe {
 					assertEquals(" verification a l'indice " + i + "" + j + ".", all[i][j], tab[i][j]);
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
-			assertFalse(false);
+			assertFalse(true);
 		}
 	}
 }
