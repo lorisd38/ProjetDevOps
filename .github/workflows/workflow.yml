@@ -4,9 +4,9 @@ name: Maven clean compile test [develop]
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push or pull request events but only for the develop branch
   push:
-    branches: [ develop ]
+    branches: [ develop, feature-construction ]
   pull_request:
     branches: [ develop ]
 
