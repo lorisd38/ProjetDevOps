@@ -9,19 +9,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import exception.PandaExceptions;
+import exception.TooManyDataException;
+import exception.TooManyValueException;
+
 public class TestDataframe {
-	private Dataframe d;
 	private static String PATH;
-
-	@Before
-	public void setUpBefore() throws Exception {
-		d = new Dataframe();
-		PATH = "src/test/resources/test.csv";
-	}
-
-	@After
-	public void tearDownAfter() throws Exception {
-	}
+	private Dataframe d;
 
 	private void remplirFile(int largeur, int hauteur, String PATH) throws IOException {
 		FileWriter fw = new FileWriter(PATH);
@@ -33,6 +27,16 @@ public class TestDataframe {
 			fw.append("\n");
 		}
 		fw.close();
+	}
+
+	@Before
+	public void setUpBefore() throws Exception {
+		d = new Dataframe();
+		PATH = "src/test/resources/test.csv";
+	}
+
+	@After
+	public void tearDownAfter() throws Exception {
 	}
 
 	@Test
@@ -111,9 +115,9 @@ public class TestDataframe {
 					assertEquals(" verification a l'indice " + i + "" + j + ".", all[i][j], tab[i][j]);
 				}
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			assertFalse(true);
 		}
 	}
 }
