@@ -12,7 +12,7 @@ public class Dataframe {
 			Object[] c = tableau[i];
 			if (c.length == 1)
 				dataframe.add(new Series<>((String)c[0]));
-			else if (c.length > 1) {
+			else {
 				Object elem = c[1];
 				if (elem instanceof String)
 					ajoutColonne("String", c);
@@ -20,13 +20,15 @@ public class Dataframe {
 					ajoutColonne("Integer", c);
 				else if (elem instanceof Float)
 					ajoutColonne("Float", c);
+				else if (elem == null)
+					ajoutColonne("null", c);
 				else
 					throw new Exception();
 			}
 		}
 	}
 
-	private void ajoutColonne(String type, Object[] c) {
+	private void ajoutColonne(String type, Object[] c) throws Exception {
 		switch (type) {
 			case "String":
 				Series<String> s = new Series<>();
@@ -44,6 +46,18 @@ public class Dataframe {
 				}
 				dataframe.add(si);
 				break;
+			case "null":
+				int j = 2;
+				while (j < c.length && c[j] == null) j ++;
+				if (j >= c.length) throw new Exception();
+				if (c[j] instanceof String)
+					ajoutColonne("String", c);
+				else if (c[j] instanceof Integer)
+					ajoutColonne("Integer", c);
+				else if (c[j] instanceof Float)
+					ajoutColonne("Float", c);
+				else throw new Exception();
+				break;
 			default:
 				Series<Float> sf = new Series<>();
 				for (int i = 0; i < c.length; i ++) {
@@ -52,6 +66,16 @@ public class Dataframe {
 				}
 				dataframe.add(sf);
 		}
+	}
+	
+	public void afficheDataframe() {
+		for (Series s : dataframe) {
+			System.out.print(s.getName() + "\t");
+			for (Object o : s.getColumn())
+				System.out.print(o + "\t");
+			System.out.println();
+		}
+		System.out.println();
 	}
 	
 	public ArrayList<Series> getDataframe() {
@@ -127,9 +151,9 @@ public class Dataframe {
 		for (int c : colonne) {
 			j = 1;
 			for (int l : ligne) {
+				if (c >= dataframe.size() || c < 0) throw new Exception();
 				Series s = dataframe.get(c);
-				if (c >= dataframe.size() || l >= s.getSize() || l < 0 || c < 0)
-					throw new Exception();
+				if (l >= s.getSize() || l < 0) throw new Exception();
 				data[i][0] = s.getName();
 				data[i][j] = s.getElem(l);
 				j ++;
