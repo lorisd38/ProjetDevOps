@@ -11,6 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import exception.PandaExceptions;
+import exception.PandaNameNotFound;
+import exception.PandaNoData;
+import exception.PandaOutOfBound;
 import exception.TooManyDataException;
 import exception.TooManyValueException;
 
@@ -68,24 +71,27 @@ public class TestDataframe {
 
 	@Test
 	public void testAjout() {
+		Dataframe dataframe = new Dataframe();
 		String[] listeInt = { "1", "2", "3" };
-		assertEquals(d.type(listeInt), d.INTEGER);
+		assertEquals(dataframe.type(listeInt), d.INTEGER);
 		String[] listeString = { "a", "b", "b" };
-		assertEquals(d.type(listeString), d.STRING);
+		assertEquals(dataframe.type(listeString), d.STRING);
 		String[] listeFloat = { "0,1", "0,2", "0,2" };
-		assertEquals(d.type(listeFloat), d.FLOAT);
+		assertEquals(dataframe.type(listeFloat), d.FLOAT);
 	}
 
 	@Test(expected = TooManyDataException.class)
 	public void testAjoutTropGrand() throws Exception {
+		Dataframe dataframe = new Dataframe();
 		remplirFile(PandaExceptions.MAX_DATA, PandaExceptions.MAX_VALUES - 1, PATH);
-		d.toTab(PATH);
+		dataframe.toTab(PATH);
 	}
 
 	@Test(expected = TooManyValueException.class)
 	public void testAjoutTropLarge() throws Exception {
+		Dataframe dataframe = new Dataframe();
 		remplirFile(PandaExceptions.MAX_DATA - 1, PandaExceptions.MAX_VALUES, PATH);
-		d.toTab(PATH);
+		dataframe.toTab(PATH);
 	}
 
 	@Test
@@ -169,7 +175,7 @@ public class TestDataframe {
 		}
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaNameNotFound.class)
 	public void testSelectionColonneNomInconnu() throws Exception {
 		d.selectionColonne("Inconnu");
 	}
@@ -195,19 +201,19 @@ public class TestDataframe {
 		}
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaNoData.class)
 	public void testSelectionColonnesListNull() throws Exception {
 		ArrayList<String> selection = null;
 		d.selectionColonnes(selection);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaNoData.class)
 	public void testSelectionColonnesListVide() throws Exception {
 		ArrayList<String> selection = new ArrayList<>();
 		d.selectionColonnes(selection);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaNameNotFound.class)
 	public void testSelectionColonnesNomInconnu() throws Exception {
 		ArrayList<String> selection = new ArrayList<>();
 		selection.add("A");
@@ -224,22 +230,22 @@ public class TestDataframe {
 		assertEquals(data[2][7], d.selectionElement(6, 2));
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionElementColonneNegatif() throws Exception {
 		d.selectionElement(0, -1);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionElementColonneTropGrand() throws Exception {
 		d.selectionElement(0, nbColonnes);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionElementLigneNegatif() throws Exception {
 		d.selectionElement(-1, 0);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionElementLigneTropGrand() throws Exception {
 		d.selectionElement(nbLignes, 0);
 	}
@@ -265,7 +271,7 @@ public class TestDataframe {
 		}
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionElementsColonneNegatif() throws Exception {
 		ArrayList<Integer> colonne = new ArrayList<>();
 		ArrayList<Integer> ligne = new ArrayList<>();
@@ -275,7 +281,7 @@ public class TestDataframe {
 		d.selectionElements(ligne, colonne);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaNoData.class)
 	public void testSelectionElementsColonneNull() throws Exception {
 		ArrayList<Integer> colonne = null;
 		ArrayList<Integer> ligne = new ArrayList<>();
@@ -283,7 +289,7 @@ public class TestDataframe {
 		d.selectionElements(ligne, colonne);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionElementsColonneTropGrand() throws Exception {
 		ArrayList<Integer> colonne = new ArrayList<>();
 		ArrayList<Integer> ligne = new ArrayList<>();
@@ -293,7 +299,7 @@ public class TestDataframe {
 		d.selectionElements(ligne, colonne);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaNoData.class)
 	public void testSelectionElementsColonneVide() throws Exception {
 		ArrayList<Integer> colonne = new ArrayList<>();
 		ArrayList<Integer> ligne = new ArrayList<>();
@@ -301,7 +307,7 @@ public class TestDataframe {
 		d.selectionElements(ligne, colonne);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionElementsLigneNegatif() throws Exception {
 		ArrayList<Integer> colonne = new ArrayList<>();
 		ArrayList<Integer> ligne = new ArrayList<>();
@@ -312,7 +318,7 @@ public class TestDataframe {
 		d.selectionElements(ligne, colonne);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaNoData.class)
 	public void testSelectionElementsLigneNull() throws Exception {
 		ArrayList<Integer> colonne = new ArrayList<>();
 		ArrayList<Integer> ligne = null;
@@ -321,7 +327,7 @@ public class TestDataframe {
 		d.selectionElements(ligne, colonne);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionElementsLigneTropGrand() throws Exception {
 		ArrayList<Integer> colonne = new ArrayList<>();
 		ArrayList<Integer> ligne = new ArrayList<>();
@@ -332,7 +338,7 @@ public class TestDataframe {
 		d.selectionElements(ligne, colonne);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaNoData.class)
 	public void testSelectionElementsLigneVide() throws Exception {
 		ArrayList<Integer> colonne = new ArrayList<>();
 		ArrayList<Integer> ligne = new ArrayList<>();
@@ -341,12 +347,12 @@ public class TestDataframe {
 		d.selectionElements(ligne, colonne);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionIndexNegatif() throws Exception {
 		d.selection(-1);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionIndexTropGrand() throws Exception {
 		d.selection(nbLignes + 1);
 	}
@@ -371,7 +377,7 @@ public class TestDataframe {
 		}
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionLignesIndexNegatif() throws Exception {
 		ArrayList<Integer> selection = new ArrayList<>();
 		selection.add(0);
@@ -381,7 +387,7 @@ public class TestDataframe {
 		d.selectionLignes(selection);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaOutOfBound.class)
 	public void testSelectionLignesIndexTropGrand() throws Exception {
 		ArrayList<Integer> selection = new ArrayList<>();
 		selection.add(0);
@@ -389,6 +395,18 @@ public class TestDataframe {
 		selection.add(7);
 		selection.add(8);
 		d.selectionLignes(selection);
+	}
+	
+	@Test(expected = PandaNoData.class)
+	public void testSelectionLignesListeNulle() throws Exception {
+		ArrayList<Integer> ligne = null;
+		d.selectionLignes(ligne);
+	}
+	
+	@Test(expected = PandaNoData.class)
+	public void testSelectionLignesListeVide() throws Exception {
+		ArrayList<Integer> ligne = new ArrayList<>();
+		d.selectionLignes(ligne);
 	}
 
 	@Test
@@ -416,20 +434,20 @@ public class TestDataframe {
 		}
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaNoData.class)
 	public void testSelectionMasqueNull() throws Exception {
 		ArrayList<Boolean> tab = null;
 		d.selectionMasque(tab);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaNoData.class)
 	public void testSelectionMasqueTailleDifferente() throws Exception {
 		ArrayList<Boolean> tab = new ArrayList<>();
 		tab.add(false);
 		d.selectionMasque(tab);
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = PandaNoData.class)
 	public void testSelectionMasqueVide() throws Exception {
 		ArrayList<Boolean> tab = new ArrayList<>();
 		d.selectionMasque(tab);
@@ -437,6 +455,7 @@ public class TestDataframe {
 
 	@Test
 	public void testToTab() {
+		Dataframe dataframe = new Dataframe();
 		try {
 			int hauteur = 201;
 			int largeur = 3;
@@ -449,7 +468,7 @@ public class TestDataframe {
 				all[i + 1] = toAdd;
 			}
 
-			String[][] tab = d.toTab(PATH);
+			String[][] tab = dataframe.toTab(PATH);
 			for (int i = 0; i < 201; i++) {
 				for (int j = 0; j < 3; j++) {
 					assertEquals(" verification a l'indice " + i + "" + j + ".", all[i][j], tab[i][j]);
