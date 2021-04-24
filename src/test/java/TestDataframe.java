@@ -9,15 +9,15 @@ import org.junit.Test;
 
 @SuppressWarnings("rawtypes")
 public class TestDataframe {
-	private static Dataframe d;
-	private static Object[][] data;
 	private static final int nbColonnes = 8;
 	private static final int nbLignes = 8;
+	private Dataframe d;
+	private Object[][] data;
 
 	@Before
 	public void setUpBefore() throws Exception {
 		data = new Object[nbColonnes][nbLignes + 1];
-		for (int i = 0; i < nbColonnes; i++) {
+		for (int i = 0; i < nbLignes; i++) {
 			if (i == 0) {
 				data[0][i] = "A";
 				data[1][i] = "B";
@@ -173,15 +173,15 @@ public class TestDataframe {
 		ArrayList<Integer> ligne = new ArrayList<>();
 		colonne.add(5);
 		colonne.add(4);
-		ligne.add(nbLignes - 1);
-		ligne.add(5);
+		ligne.add(1);
+		ligne.add(7);
 		Dataframe newData = d.selectionElements(ligne, colonne);
 		int k = 0, m;
 		for (Series s : newData.getDataframe()) {
 			assertEquals(data[colonne.get(k)][0], s.getName());
 			m = 0;
 			for (Object o : s.getColumn()) {
-				assertEquals(data[colonne.get(k)][ligne.get(m)], o);
+				assertEquals(data[colonne.get(k)][ligne.get(m) + 1], o);
 				m++;
 			}
 			k++;
@@ -279,7 +279,7 @@ public class TestDataframe {
 		ArrayList<Integer> selection = new ArrayList<>();
 		selection.add(0);
 		selection.add(3);
-		selection.add(7);
+		selection.add(5);
 		selection.add(6);
 		Dataframe newData = d.selectionLignes(selection);
 		int i = 0, j;
@@ -317,11 +317,11 @@ public class TestDataframe {
 	@Test
 	public void testSelectionMasque() throws Exception {
 		ArrayList<Boolean> tab = new ArrayList<>();
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < nbLignes; i++)
 			tab.add(false);
 		tab.set(1, true);
 		tab.set(5, true);
-		tab.set(7, true);
+		tab.set(6, true);
 		int i = 0, j, k;
 		Dataframe newData = d.selectionMasque(tab);
 		for (Series s : newData.getDataframe()) {
