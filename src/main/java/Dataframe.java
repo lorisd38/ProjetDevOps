@@ -1,19 +1,23 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Dataframe {
 	public static void main(String[] args) {
-		Object[][] tab = {{"B", 3,6,9,2,5,8,1,4,7,0}, {"A", 1.5,4.1,7.6,2.3,5.1,8.7,3.9,6.5,9.1,1.5}, {"C","a","f","c","b","r","e","t","y","z","q"}};
-		Dataframe data;
-		try {
-			data = new Dataframe(tab);
-			data.afficheDataframe();
-			System.out.println("=================");
-			data.splitPercent_SortedData(34).afficheDataframe();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		 Object[][] tab1 = {{"Tab1", -2,-1,0,1,2}, {"Tab2",0.5,178.6,1.65,1.2 }, {"Tab3",-0.5,-178.6,-1.65,-1.2 }};
+			Dataframe data1;
+			try {
+				data1 = new Dataframe(tab1);
+				ArrayList<Series> res = data1.getMeanEachColumn().getDataframe();
+				for (Iterator iterator = res.iterator(); iterator.hasNext();) {
+					Series series = (Series) iterator.next();
+					System.out.println(series.getElem(0));
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -41,6 +45,11 @@ public class Dataframe {
 				//rajouter un else on renvoie une erreur (type non supporte)
 			}
 		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public ArrayList<Series> getDataframe() {
+		return dataframe;
 	}
 	
 	private void ajoutColonne(String type, Object[] c) {
