@@ -1,23 +1,57 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Dataframe {
+	
+	
 	public static void main(String[] args) {
-		 Object[][] tab1 = {{"Tab1", -2,-1,0,1,2}, {"Tab2",0.5,178.6,1.65,1.2 }, {"Tab3",-0.5,-178.6,-1.65,-1.2 }};
-			Dataframe data1;
-			try {
-				data1 = new Dataframe(tab1);
-				ArrayList<Series> res = data1.getMeanEachColumn().getDataframe();
-				for (Iterator iterator = res.iterator(); iterator.hasNext();) {
-					Series series = (Series) iterator.next();
-					System.out.println(series.getElem(0));
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		Object[][] data = new Object[8][8 + 1];
+		for (int i = 0; i < 8; i++) {
+			if (i == 0) {
+				data[0][i] = "A";
+				data[1][i] = "B";
+				data[2][i] = "C";
+				data[3][i] = "D";
+				data[4][i] = "E";
+				data[5][i] = "F";
+				data[6][i] = "G";
+				data[7][i] = "H";
+			} else {
+				data[0][i] = i;
+				data[1][i] = Integer.toString(i);
+				data[2][i] = i;
+				data[3][i] = i * 10;
+				data[4][i] = Integer.toString(i * 10);
+				data[5][i] = (float) i * 10;
+				data[6][i] = i * 100;
+				data[7][i] = Integer.toString(i * 100);
 			}
+		}
+		try {
+			Dataframe d = new Dataframe(data);
+			d.afficheDataframe();
+			System.out.println("Max");
+			d.getMaxEachColumn().afficheDataframe();
+			System.out.println("Min");
+			d.getMinEachColumn().afficheDataframe();
+			System.out.println("Mean");
+			d.getMeanEachColumn().afficheDataframe();
+			System.out.println("Sd");
+			d.getSdEachColumn().afficheDataframe();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+    
+	public void afficheDataframe() {
+		for (Series<?> s : dataframe) {
+			System.out.print(s.getName() + "\t");
+			for (Object o : s.getColumn())
+				System.out.print(o + "\t");
+			System.out.println();
+		}
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -80,139 +114,168 @@ public class Dataframe {
         }
     }
 	
-	private <E> void ajoutSeries(Series<E> s) {
-		this.dataframe.add(s);		
-	}
-
-	public void afficheDataframe() {
-		for (Series<?> s : dataframe) {
-			System.out.print(s.getName() + "\t");
-			for (Object o : s.getColumn())
-				System.out.print(o + "\t");
-			System.out.println();
-		}
+	private void ajoutSeries(Series<?> s) {
+		this.dataframe.add(s);
 	}
 	
-	public double getMeanColumn(int index) {
+	public Object getMeanColumn(int index) {
 		if(index < dataframe.size()) {
 			Series<?> s = dataframe.get(index);
+			if (s.getSize() > 0 && s.getElem(0) instanceof String)
+				return "NaN";
 			float mean = 0;
 			for (int i = 0; i < s.getSize(); i++) {
-				if (s.getElem(i) instanceof Double)
-					mean += (Double) s.getElem(i);
+				if (s.getElem(i) instanceof Float)
+					mean += (Float) s.getElem(i);
 				else if (s.getElem(i) instanceof Integer)
 					mean += (Integer) s.getElem(i);
 			}
 			return mean / s.getSize();
-		} else {
-			return -1;//TODO Exception
-		}
+		} 
+		return "NaN";
 	}
 	
 	public Dataframe getMeanEachColumn() {
 		Dataframe dataframe_mean = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
-			Series<Double> serie_mean = new Series<>();
-			serie_mean.setName(dataframe.get(i).getName());
-			serie_mean.getColumn().add(getMeanColumn(i));
-			dataframe_mean.ajoutSeries(serie_mean);
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Float || s.getElem(0) instanceof Integer)) {
+				Series<Float> serie_mean = new Series<>();
+				serie_mean.setName(dataframe.get(i).getName());
+				serie_mean.getColumn().add((Float) getMeanColumn(i));
+				dataframe_mean.ajoutSeries(serie_mean);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_mean = new Series<>();
+				serie_mean.setName(dataframe.get(i).getName());
+				serie_mean.getColumn().add((String) getMeanColumn(i));
+				dataframe_mean.ajoutSeries(serie_mean);
+			}
 		}
 		return dataframe_mean;
 	}
 	
-	public double getMaxColumn(int index) {
+	public Object getMaxColumn(int index) {
 		if(index < dataframe.size()) {
 			Series<?> s = dataframe.get(index);
-			double max = 0;
-			if (s.getSize() > 0 && s.getElem(0) instanceof Double)
-				max = (Double) s.getElem(0);
+			float max = 0;
+			if (s.getSize() > 0 && s.getElem(0) instanceof Float)
+				max = (Float) s.getElem(0);
 			else if (s.getSize() > 0 && s.getElem(0) instanceof Integer)
 				max = (Integer) s.getElem(0);
+			else if (s.getSize() > 0 && s.getElem(0) instanceof String)
+				return "Nan";
 			
 			for (int i = 0; i < s.getSize(); i++) {
-				if (s.getElem(i) instanceof Double)
-					max = max > (Double) s.getElem(i) ? max : (Double) s.getElem(i);
+				if (s.getElem(i) instanceof Float)
+					max = max > (Float) s.getElem(i) ? max : (Float) s.getElem(i);
 				else if (s.getElem(i) instanceof Integer)
 					max = max > (Integer) s.getElem(i) ? max : (Integer) s.getElem(i);
 			}
 			return max;
-		} else {
-			return -1;//TODO Exception
 		}
+		return "NaN";
 	}
 	
 	public Dataframe getMaxEachColumn() {
 		Dataframe dataframe_max = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
-			Series<Double> serie_max = new Series<>();
-			serie_max.setName(dataframe.get(i).getName());
-			serie_max.getColumn().add(getMaxColumn(i));
-			dataframe_max.ajoutSeries(serie_max);
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Float || s.getElem(0) instanceof Integer)) {
+				Series<Float> serie_max = new Series<>();
+				serie_max.setName(dataframe.get(i).getName());
+				serie_max.getColumn().add((Float) getMaxColumn(i));
+				dataframe_max.ajoutSeries(serie_max);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_max = new Series<>();
+				serie_max.setName(dataframe.get(i).getName());
+				serie_max.getColumn().add((String) getMaxColumn(i));
+				dataframe_max.ajoutSeries(serie_max);
+			}
 		}
 		return dataframe_max;
 	}
 	
-	public double getMinColumn(int index) {
+	public Object getMinColumn(int index) {
 		if(index < dataframe.size()) {
 			Series<?> s = dataframe.get(index);
-			double min = 0;
-			if (s.getSize() > 0 && s.getElem(0) instanceof Double)
-				min = (Double) s.getElem(0);
+			float min = 0;
+			if (s.getSize() > 0 && s.getElem(0) instanceof Float)
+				min = (Float) s.getElem(0);
 			else if (s.getSize() > 0 && s.getElem(0) instanceof Integer)
 				min = (Integer) s.getElem(0);
+			else if (s.getSize() > 0 && s.getElem(0) instanceof String)
+				return "Nan";
 			
 			for (int i = 0; i < s.getSize(); i++) {
-				if (s.getElem(i) instanceof Double)
-					min = min < (Double) s.getElem(i) ? min : (Double) s.getElem(i);
+				if (s.getElem(i) instanceof Float)
+					min = min < (Float) s.getElem(i) ? min : (Float) s.getElem(i);
 				else if (s.getElem(i) instanceof Integer)
 					min = min < (Integer) s.getElem(i) ? min : (Integer) s.getElem(i);
 			}
 			return min;
-		} else {
-			return -1;//TODO Exception
 		}
+		return "NaN";
 	}
 	
 	public Dataframe getMinEachColumn() {
 		Dataframe dataframe_max = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
-			Series<Double> serie_max = new Series<>();
-			serie_max.setName(dataframe.get(i).getName());
-			serie_max.getColumn().add(getMinColumn(i));
-			dataframe_max.ajoutSeries(serie_max);
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Float || s.getElem(0) instanceof Integer)) {
+				Series<Float> serie_max = new Series<>();
+				serie_max.setName(dataframe.get(i).getName());
+				serie_max.getColumn().add((Float) getMinColumn(i));
+				dataframe_max.ajoutSeries(serie_max);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_max = new Series<>();
+				serie_max.setName(dataframe.get(i).getName());
+				serie_max.getColumn().add((String) getMinColumn(i));
+				dataframe_max.ajoutSeries(serie_max);
+			}
 		}
 		return dataframe_max;
 	}
 	
-	public double getSdColumn(int index) {
+	public Object getSdColumn(int index) {
 		if(index < dataframe.size()) {
 			Series<?> s = dataframe.get(index);
-			double mean = getMinColumn(index);
-			double standardDeviation  = 0;
-			for (int i = 0; i < s.getSize(); i++) {
-				if (s.getElem(i) instanceof Double)
-					standardDeviation  += Math.pow((Double) s.getElem(i) - mean, 2);
-				else if (s.getElem(i) instanceof Integer)
-					standardDeviation  += Math.pow((Integer) s.getElem(i) - mean, 2);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Float || s.getElem(0) instanceof Integer)) {
+				float mean = (float) getMinColumn(index);
+				float standardDeviation  = 0;
+				for (int i = 0; i < s.getSize(); i++) {
+					if (s.getElem(i) instanceof Float)
+						standardDeviation  += Math.pow((Float) s.getElem(i) - mean, 2);
+					else if (s.getElem(i) instanceof Integer)
+						standardDeviation  += Math.pow((Integer) s.getElem(i) - mean, 2);
+				}
+				return (float) Math.sqrt(standardDeviation  / s.getSize());
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				return "NaN";
 			}
-			return (double) Math.sqrt(standardDeviation  / s.getSize());
-		} else {
-			return -1;//TODO Exception
 		}
+		return "NaN";
 	}
 	
 	public Dataframe getSdEachColumn() {
 		Dataframe dataframe_max = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
-			Series<Double> serie_max = new Series<>();
-			serie_max.setName(dataframe.get(i).getName());
-			serie_max.getColumn().add(getSdColumn(i));
-			dataframe_max.ajoutSeries(serie_max);
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Float || s.getElem(0) instanceof Integer)) {
+				Series<Float> serie_max = new Series<>();
+				serie_max.setName(dataframe.get(i).getName());
+				serie_max.getColumn().add((Float) getSdColumn(i));
+				dataframe_max.ajoutSeries(serie_max);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_max = new Series<>();
+				serie_max.setName(dataframe.get(i).getName());
+				serie_max.getColumn().add((String) getSdColumn(i));
+				dataframe_max.ajoutSeries(serie_max);
+			}
 		}
 		return dataframe_max;
 	}
 
-	public Dataframe splitPercent_SortedData(double percent) {
+	public Dataframe splitPercent_SortedData(float percent) {
 		if(percent < 0 || percent > 100) //TODO Exception 
 			return null;
 		Dataframe dataframeSplited = new Dataframe();
