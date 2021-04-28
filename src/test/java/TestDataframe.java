@@ -56,7 +56,7 @@ public class TestDataframe {
 				data[2][i] = i;
 				data[3][i] = i * 10;
 				data[4][i] = Integer.toString(i * 10);
-				data[5][i] = (float) i * 10;
+				data[5][i] = (double) i * 10;
 				data[6][i] = i * 100;
 				data[7][i] = Integer.toString(i * 100);
 			}
@@ -76,8 +76,8 @@ public class TestDataframe {
 		assertEquals(dataframe.type(listeInt), d.INTEGER);
 		String[] listeString = { "a", "b", "b" };
 		assertEquals(dataframe.type(listeString), d.STRING);
-		String[] listeFloat = { "0,1", "0,2", "0,2" };
-		assertEquals(dataframe.type(listeFloat), d.FLOAT);
+		String[] listeDouble = { "0,1", "0,2", "0,2" };
+		assertEquals(dataframe.type(listeDouble), d.DOUBLE);
 	}
 
 	@Test(expected = TooManyDataException.class)
@@ -109,6 +109,61 @@ public class TestDataframe {
 	}
 
 	@Test
+	public void testgetMaxSizeSeries() {
+
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2" } };
+		Dataframe data1;
+		try {
+			data1 = new Dataframe(tab1);
+			assertEquals(4, data1.getMaxSizeSeries());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Object[][] tab2 = { { "Tab1" }, { "Tab2", 2, 4, 5 } };
+		Dataframe data2;
+		try {
+			data2 = new Dataframe(tab2);
+			assertEquals(3, data2.getMaxSizeSeries());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Object[][] tab3 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
+		Dataframe data3;
+		try {
+			data3 = new Dataframe(tab3);
+			assertEquals(4, data3.getMaxSizeSeries());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Object[][] tab4 = { { "Tab1", 3, 4 }, { "Tab2", 2, 4, 5 } };
+		Dataframe data4;
+		try {
+			data4 = new Dataframe(tab4);
+			assertEquals(3, data4.getMaxSizeSeries());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Object[][] tab5 = { { "Tab1" }, { "Tab2" } };
+		Dataframe data5;
+		try {
+			data5 = new Dataframe(tab5);
+			assertEquals(0, data5.getMaxSizeSeries());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
 	public void testGetName() {
 		String[][] all = new String[201][3];
 		String[] contenu = { "FILE", "VALUE1", "VALUE2" };
@@ -123,13 +178,13 @@ public class TestDataframe {
 	}
 
 	@Test
-	public void testIsFloat() throws Exception {
+	public void testIsDouble() throws Exception {
 		String s = "0";
-		assertFalse(d.isFloat(s));
+		assertFalse(d.isDouble(s));
 		s = "0,2";
-		assertTrue(d.isFloat(s));
+		assertTrue(d.isDouble(s));
 		s = "BLABLA";
-		assertFalse(d.isFloat(s));
+		assertFalse(d.isDouble(s));
 	}
 
 	@Test
@@ -140,6 +195,70 @@ public class TestDataframe {
 		assertFalse(d.isInt(s));
 		s = "Test";
 		assertFalse(d.isInt(s));
+	}
+
+	@Test
+	public void testprintDataframe() {
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
+		Dataframe data;
+		try {
+			data = new Dataframe(tab1);
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
+					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframe());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testprintDataframeFirstLines() {
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
+		Dataframe data;
+		try {
+			data = new Dataframe(tab1);
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(0));
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n", data.printDataframeFirstLines(1));
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n",
+					data.printDataframeFirstLines(2));
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
+					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeFirstLines(152));
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(-1));
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
+	public void testprintDataframeLastLines() {
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
+		Dataframe data;
+		try {
+			data = new Dataframe(tab1);
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(0));
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(1));
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n",
+					data.printDataframeLastLines(2));
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
+					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(152));
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(-1));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -396,13 +515,13 @@ public class TestDataframe {
 		selection.add(8);
 		d.selectionLignes(selection);
 	}
-	
+
 	@Test(expected = PandaNoData.class)
 	public void testSelectionLignesListeNulle() throws Exception {
 		ArrayList<Integer> ligne = null;
 		d.selectionLignes(ligne);
 	}
-	
+
 	@Test(expected = PandaNoData.class)
 	public void testSelectionLignesListeVide() throws Exception {
 		ArrayList<Integer> ligne = new ArrayList<>();
