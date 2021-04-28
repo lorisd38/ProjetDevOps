@@ -176,6 +176,16 @@ public class Dataframe {
 	public ArrayList<Series> getDataframe() {
 		return dataframe;
 	}
+	
+    private int getIndiceCol(String name) throws PandaNoData {
+        int ind = 0;
+        for (Series elem : dataframe) {
+            if (name.equals(elem.getName()))
+                return ind;
+            ind++;
+        }
+        throw new PandaNoData();
+    }
 
 	public int getMaxSizeSeries() {
 		int max = 0;
@@ -189,6 +199,19 @@ public class Dataframe {
 	public String getName(String[][] liste, int colonneActuelle) {
 		return liste[0][colonneActuelle];
 	}
+	
+    public GroupBy groupBy(String name) throws Exception {
+        GroupBy toRet = new GroupBy();
+        int indiceCol = getIndiceCol(name);
+        ArrayList<Object> ao = new ArrayList<Object>();
+        for (Object o : this.dataframe.get(indiceCol).getColumn()) {
+            if (!ao.contains(o)) {
+                toRet.add(selectionParObjet(name, o));
+                ao.add(o);
+            }
+        }
+        return toRet;
+    }
 
 	/**
 	 * @param arguments un tableau de donnees
@@ -460,6 +483,44 @@ public class Dataframe {
 				data[i][k] = l.get(i).get(k);
 		}
 		return new Dataframe(data);
+	}
+	
+	public Dataframe selectionParObjet(String nomColonne, Object elem) throws Exception {
+		for (Series s : dataframe) {
+			if (s.getName() == nomColonne) {
+				return searchIndice(s, elem);
+			}
+		}
+		throw new PandaNameNotFound();
+	}
+	
+	private Dataframe searchIndice(Series s, Object elem) throws Exception {
+		ArrayList<Integer> l = new ArrayList<>();
+		int indice = 0;
+		for (Object o : s.getColumn()) {
+			if (estEgale(elem, o))
+				l.add(indice);
+			indice++;
+		}
+		return selectionLignes(l);
+	}
+	
+	/**
+	 * @param elem premier objet à comparer
+	 * @param o deuxième objet à comparer
+	 * @return true si ils sont égaux et de même type
+	 * </br> faux sinon
+	 */
+	private boolean estEgale(Object elem, Object o) {
+		if (elem == null && o == null)
+			return true;
+		if (elem instanceof Integer && o instanceof Integer)
+			return (int)elem == (int)o;
+		if (elem instanceof String && o instanceof String)
+			return elem.equals(o);
+		if (elem instanceof Double && o instanceof Double)
+			return (Double)elem == (Double)o;
+		return false;
 	}
 
 	/**
