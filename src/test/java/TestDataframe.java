@@ -109,26 +109,58 @@ public class TestDataframe {
 	}
 
 	@Test
-	public void testgetMaxSizeSeries() throws Exception {
+	public void testgetMaxSizeSeries() {
+
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2" } };
-		Dataframe data1 = new Dataframe(tab1);
-		assertEquals(4, data1.getMaxSizeSeries());
+		Dataframe data1;
+		try {
+			data1 = new Dataframe(tab1);
+			assertEquals(4, data1.getMaxSizeSeries());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		Object[][] tab2 = { { "Tab1" }, { "Tab2", 2, 4, 5 } };
-		Dataframe data2 = new Dataframe(tab2);
-		assertEquals(3, data2.getMaxSizeSeries());
+		Dataframe data2;
+		try {
+			data2 = new Dataframe(tab2);
+			assertEquals(3, data2.getMaxSizeSeries());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		Object[][] tab3 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
-		Dataframe data3 = new Dataframe(tab3);
-		assertEquals(4, data3.getMaxSizeSeries());
+		Dataframe data3;
+		try {
+			data3 = new Dataframe(tab3);
+			assertEquals(4, data3.getMaxSizeSeries());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		Object[][] tab4 = { { "Tab1", 3, 4 }, { "Tab2", 2, 4, 5 } };
-		Dataframe data4 = new Dataframe(tab4);
-		assertEquals(3, data4.getMaxSizeSeries());
+		Dataframe data4;
+		try {
+			data4 = new Dataframe(tab4);
+			assertEquals(3, data4.getMaxSizeSeries());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		Object[][] tab5 = { { "Tab1" }, { "Tab2" } };
-		Dataframe data5 = new Dataframe(tab5);
-		assertEquals(0, data5.getMaxSizeSeries());
+		Dataframe data5;
+		try {
+			data5 = new Dataframe(tab5);
+			assertEquals(0, data5.getMaxSizeSeries());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	@Test
@@ -166,45 +198,67 @@ public class TestDataframe {
 	}
 
 	@Test
-	public void testprintDataframe() throws Exception {
+	public void testprintDataframe() {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
-		Dataframe data = new Dataframe(tab1);
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
+		Dataframe data;
+		try {
+			data = new Dataframe(tab1);
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
 					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframe());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
-	public void testprintDataframeFirstLines() throws Exception {
+	public void testprintDataframeFirstLines() {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
-		Dataframe data = new Dataframe(tab1);
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(0));
+		Dataframe data;
+		try {
+			data = new Dataframe(tab1);
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n", data.printDataframeFirstLines(1));
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(0));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n",
-				data.printDataframeFirstLines(2));
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n", data.printDataframeFirstLines(1));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
-				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeFirstLines(152));
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n",
+					data.printDataframeFirstLines(2));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(-1));
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
+					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeFirstLines(152));
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(-1));
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	@Test
-	public void testprintDataframeLastLines() throws Exception {
+	public void testprintDataframeLastLines() {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
-		Dataframe data = new Dataframe(tab1);
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(0));
+		Dataframe data;
+		try {
+			data = new Dataframe(tab1);
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(1));
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(0));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n",
-				data.printDataframeLastLines(2));
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(1));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
-				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(152));
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n",
+					data.printDataframeLastLines(2));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(-1));
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
+					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(152));
+
+			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(-1));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -519,24 +573,29 @@ public class TestDataframe {
 	}
 
 	@Test
-	public void testToTab() throws Exception {
+	public void testToTab() {
 		Dataframe dataframe = new Dataframe();
-		int hauteur = 201;
-		int largeur = 3;
-		remplirFile(largeur, hauteur, PATH);
-		String[][] all = new String[201][3];
-		String[] contenu = { "FILE", "VALUE1", "VALUE2" };
-		all[0] = contenu;
-		for (int i = 0; i < 200; i++) {
-			String[] toAdd = { Integer.toString(i), Integer.toString(i * 2), Integer.toString(i * 3) };
-			all[i + 1] = toAdd;
-		}
-
-		String[][] tab = dataframe.toTab(PATH);
-		for (int i = 0; i < 201; i++) {
-			for (int j = 0; j < 3; j++) {
-				assertEquals(" verification a l'indice " + i + "" + j + ".", all[i][j], tab[i][j]);
+		try {
+			int hauteur = 201;
+			int largeur = 3;
+			remplirFile(largeur, hauteur, PATH);
+			String[][] all = new String[201][3];
+			String[] contenu = { "FILE", "VALUE1", "VALUE2" };
+			all[0] = contenu;
+			for (int i = 0; i < 200; i++) {
+				String[] toAdd = { Integer.toString(i), Integer.toString(i * 2), Integer.toString(i * 3) };
+				all[i + 1] = toAdd;
 			}
+
+			String[][] tab = dataframe.toTab(PATH);
+			for (int i = 0; i < 201; i++) {
+				for (int j = 0; j < 3; j++) {
+					assertEquals(" verification a l'indice " + i + "" + j + ".", all[i][j], tab[i][j]);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
