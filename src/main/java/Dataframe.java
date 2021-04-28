@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import exception.PandaCannotInstanciate;
 import exception.PandaExceptions;
@@ -19,7 +21,6 @@ import exception.TooManyValueException;
 
 @SuppressWarnings("rawtypes")
 public class Dataframe {
-
 	private ArrayList<Series> dataframe;
 
 	protected final String DOUBLE = "DOUBLE";
@@ -35,7 +36,7 @@ public class Dataframe {
 	public Dataframe() {
 		this.splitter = ";";
 	}
-
+  
 	/**
 	 * @param tableau d'objets a deux dimensions
 	 * @throws PandaNoData       tableau vide ou colonne vide
@@ -65,7 +66,7 @@ public class Dataframe {
 				throw new PandaNoData();
 		}
 	}
-
+  
 	/**
 	 * @param PATH le chemin vers un csv
 	 *
@@ -169,6 +170,16 @@ public class Dataframe {
 		return s;
 	}
 
+	private boolean estEgale(Object elem, Object o) {
+		if (elem instanceof Integer && o instanceof Integer)
+			return (int) elem == (int) o;
+		if (elem instanceof String && o instanceof String)
+			return elem.equals(o);
+		if (elem instanceof Double && o instanceof Double)
+			return (double) elem == (double) o;
+		return false;
+	}
+
 	/**
 	 * @return le dataframe
 	 *
@@ -185,9 +196,218 @@ public class Dataframe {
 		}
 		return max;
 	}
-
+  
 	public String getName(String[][] liste, int colonneActuelle) {
 		return liste[0][colonneActuelle];
+	}
+	
+	public Object getMeanColumn(int index) {
+		if(index < dataframe.size()) {
+			Series<?> s = dataframe.get(index);
+			if (s.getSize() > 0 && s.getElem(0) instanceof String)
+				return "NaN";
+			double mean = 0;
+			for (int i = 0; i < s.getSize(); i++) {
+				if (s.getElem(i) instanceof Double)
+					mean += (Double) s.getElem(i);
+				else if (s.getElem(i) instanceof Integer)
+					mean += (Integer) s.getElem(i);
+			}
+			return mean / s.getSize();
+		} 
+		return "NaN";
+	}
+	
+	public Dataframe getMeanEachColumn() {
+		Dataframe dataframe_mean = new Dataframe();
+		for (int i = 0; i < dataframe.size(); i++) {
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Double || s.getElem(0) instanceof Integer)) {
+				Series<Double> serie_mean = new Series<>();
+				serie_mean.setName(dataframe.get(i).getName());
+				serie_mean.getColumn().add((Double) getMeanColumn(i));
+				dataframe_mean.ajoutSeries(serie_mean);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_mean = new Series<>();
+				serie_mean.setName(dataframe.get(i).getName());
+				serie_mean.getColumn().add((String) getMeanColumn(i));
+				dataframe_mean.ajoutSeries(serie_mean);
+			} else {
+				Series<String> serie_null = new Series<>();
+				serie_null.setName(dataframe.get(i).getName());
+				serie_null.getColumn().add("null");
+				dataframe_mean.ajoutSeries(serie_null);
+			}
+		}
+		return dataframe_mean;
+	}
+	
+	private void ajoutSeries(Series<?> s) {
+		if(dataframe==null)
+			dataframe = new ArrayList<>();
+		this.dataframe.add(s);
+	}
+	
+	public Object getMaxColumn(int index) {
+		if(index < dataframe.size()) {
+			Series<?> s = dataframe.get(index);
+			double max = 0;
+			if (s.getSize() > 0 && s.getElem(0) instanceof Double)
+				max = (Double) s.getElem(0);
+			else if (s.getSize() > 0 && s.getElem(0) instanceof Integer)
+				max = (Integer) s.getElem(0);
+			else if (s.getSize() > 0 && s.getElem(0) instanceof String)
+				return "Nan";
+			
+			for (int i = 0; i < s.getSize(); i++) {
+				if (s.getElem(i) instanceof Double)
+					max = max > (Double) s.getElem(i) ? max : (Double) s.getElem(i);
+				else if (s.getElem(i) instanceof Integer)
+					max = max > (Integer) s.getElem(i) ? max : (Integer) s.getElem(i);
+			}
+			return max;
+		}
+		return "NaN";
+	}
+	
+	public Dataframe getMaxEachColumn() {
+		Dataframe dataframe_max = new Dataframe();
+		for (int i = 0; i < dataframe.size(); i++) {
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Double || s.getElem(0) instanceof Integer)) {
+				Series<Double> serie_max = new Series<>();
+				serie_max.setName(dataframe.get(i).getName());
+				serie_max.getColumn().add((Double) getMaxColumn(i));
+				dataframe_max.ajoutSeries(serie_max);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_max = new Series<>();
+				serie_max.setName(dataframe.get(i).getName());
+				serie_max.getColumn().add((String) getMaxColumn(i));
+				dataframe_max.ajoutSeries(serie_max);
+			} else {
+				Series<String> serie_null = new Series<>();
+				serie_null.setName(dataframe.get(i).getName());
+				serie_null.getColumn().add("null");
+				dataframe_max.ajoutSeries(serie_null);
+			}
+		}
+		return dataframe_max;
+	}
+	
+	public Object getMinColumn(int index) {
+		if(index < dataframe.size()) {
+			Series<?> s = dataframe.get(index);
+			double min = 0;
+			if (s.getSize() > 0 && s.getElem(0) instanceof Double)
+				min = (Double) s.getElem(0);
+			else if (s.getSize() > 0 && s.getElem(0) instanceof Integer)
+				min = (Integer) s.getElem(0);
+			else if (s.getSize() > 0 && s.getElem(0) instanceof String)
+				return "Nan";
+			
+			for (int i = 0; i < s.getSize(); i++) {
+				if (s.getElem(i) instanceof Double)
+					min = min < (Double) s.getElem(i) ? min : (Double) s.getElem(i);
+				else if (s.getElem(i) instanceof Integer)
+					min = min < (Integer) s.getElem(i) ? min : (Integer) s.getElem(i);
+			}
+			return min;
+		}
+		return "NaN";
+	}
+	
+	public Dataframe getMinEachColumn() {
+		Dataframe dataframe_min = new Dataframe();
+		for (int i = 0; i < dataframe.size(); i++) {
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Double || s.getElem(0) instanceof Integer)) {
+				Series<Double> serie_min = new Series<>();
+				serie_min.setName(dataframe.get(i).getName());
+				serie_min.getColumn().add((Double) getMinColumn(i));
+				dataframe_min.ajoutSeries(serie_min);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_min = new Series<>();
+				serie_min.setName(dataframe.get(i).getName());
+				serie_min.getColumn().add((String) getMinColumn(i));
+				dataframe_min.ajoutSeries(serie_min);
+			} else {
+				Series<String> serie_null = new Series<>();
+				serie_null.setName(dataframe.get(i).getName());
+				serie_null.getColumn().add("null");
+				dataframe_min.ajoutSeries(serie_null);
+			}
+		}
+		return dataframe_min;
+	}
+	
+	public Object getSdColumn(int index) {
+		if(index < dataframe.size()) {
+			Series<?> s = dataframe.get(index);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Double || s.getElem(0) instanceof Integer)) {
+				double mean = (double) getMinColumn(index);
+				double standardDeviation  = 0;
+				for (int i = 0; i < s.getSize(); i++) {
+					if (s.getElem(i) instanceof Double)
+						standardDeviation  += Math.pow((Double) s.getElem(i) - mean, 2);
+					else if (s.getElem(i) instanceof Integer)
+						standardDeviation  += Math.pow((Integer) s.getElem(i) - mean, 2);
+				}
+				double res = (double) Math.sqrt(standardDeviation  / s.getSize());
+				return (double) Math.round(res * 100) / 100;
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				return "NaN";
+			}
+		}
+		return "NaN";
+	}
+	
+	public Dataframe getSdEachColumn() {
+		Dataframe dataframe_sd = new Dataframe();
+		for (int i = 0; i < dataframe.size(); i++) {
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Double || s.getElem(0) instanceof Integer)) {
+				Series<Double> serie_sd = new Series<>();
+				serie_sd.setName(dataframe.get(i).getName());
+				serie_sd.getColumn().add( (double) getSdColumn(i) );
+				dataframe_sd.ajoutSeries(serie_sd);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_sd = new Series<>();
+				serie_sd.setName(dataframe.get(i).getName());
+				serie_sd.getColumn().add((String) getSdColumn(i));
+				dataframe_sd.ajoutSeries(serie_sd);
+			} else {
+				Series<String> serie_null = new Series<>();
+				serie_null.setName(dataframe.get(i).getName());
+				serie_null.getColumn().add("null");
+				dataframe_sd.ajoutSeries(serie_null);
+			}
+		}
+		return dataframe_sd;
+	}
+
+	public Dataframe splitPercent_SortedData(double percent) {
+		if(percent < 0 || percent > 100) //TODO Exception 
+			return null;
+		Dataframe dataframeSplited = new Dataframe();
+		for (int i = 0; i < dataframe.size(); i++) {
+			Series<?> s = dataframe.get(i);
+			//On trie par ordre croissant
+			List<Object> ssorted = s.getColumn().stream().sorted().collect(Collectors.toList());
+			//On creee 2 nouvelles listes
+			ArrayList<Object> sStart = new ArrayList<>();
+			ArrayList<Object> sEnd = new ArrayList<>();
+			//On recupere le nombre de valeurs qu'on devra copier
+			int limit = (int) Math.floor(ssorted.size() * (percent/100));
+			//On copie les valeurs
+			for (int j = 0; j < limit; j++) {
+				sStart.add(ssorted.get(j));
+				sEnd.add(ssorted.get(ssorted.size()-limit+j));
+			}
+			//On ajoute les deux nouvelles Series
+			dataframeSplited.ajoutSeries((new Series<>(s.getName()+"_FIRST", sStart)));
+			dataframeSplited.ajoutSeries((new Series<>(s.getName()+"_LAST", sEnd)));
+		}
+		return dataframeSplited;
 	}
 
 	/**
@@ -214,7 +434,7 @@ public class Dataframe {
 				System.err.println("LA COLONNE " + i + " CONTIENT UN TYPE INCONNU");
 				System.exit(0);
 			}
-
+	
 			s.setName(name);
 			s = ajouterTout(s, arguments, i);
 			dataframe.add(s);
@@ -252,6 +472,17 @@ public class Dataframe {
 		if (toRet.length >= PandaExceptions.MAX_DATA)
 			throw new TooManyDataException();
 		return toRet;
+	}
+
+	private Dataframe searchIndice(Series s, Object elem) throws Exception {
+		ArrayList<Integer> l = new ArrayList<>();
+		int indice = 0;
+		for (Object o : s.getColumn()) {
+			if (o != null && estEgale(elem, o))
+				l.add(indice);
+			indice++;
+		}
+		return selectionLignes(l);
 	}
 
 	private String printCore(int min, int max) {
@@ -461,7 +692,16 @@ public class Dataframe {
 		}
 		return new Dataframe(data);
 	}
-
+	
+	public Dataframe selectionParObjet(String nomColonne, Object elem) throws Exception {
+		for (Series s : dataframe) {
+			String name = s.getName();
+			if (nomColonne.equals(name)) {
+				return searchIndice(s, elem);
+			}
+		}
+		throw new PandaNameNotFound();
+	}
 	/**
 	 *
 	 * @param PATH le chemin vers un fichier CSV
@@ -491,10 +731,10 @@ public class Dataframe {
 	}
 
 	/**
-	 *
-	 * @param listeObjet, une colonne du tableau
-	 * @return une chaine de caracteres correspondant au types de donnees
-	 */
+    *
+    * @param listeObjet, une colonne du tableau
+    * @return une chaine de caracteres correspondant au types de donnees
+    */
 	public String type(String[] listeObjet) {
 		String valeur = listeObjet[0];
 		if (isInt(valeur))
