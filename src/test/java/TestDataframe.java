@@ -109,58 +109,26 @@ public class TestDataframe {
 	}
 
 	@Test
-	public void testgetMaxSizeSeries() {
-
+	public void testgetMaxSizeSeries() throws Exception {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2" } };
-		Dataframe data1;
-		try {
-			data1 = new Dataframe(tab1);
-			assertEquals(4, data1.getMaxSizeSeries());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(4, data1.getMaxSizeSeries());
 
 		Object[][] tab2 = { { "Tab1" }, { "Tab2", 2, 4, 5 } };
-		Dataframe data2;
-		try {
-			data2 = new Dataframe(tab2);
-			assertEquals(3, data2.getMaxSizeSeries());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Dataframe data2 = new Dataframe(tab2);
+		assertEquals(3, data2.getMaxSizeSeries());
 
 		Object[][] tab3 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
-		Dataframe data3;
-		try {
-			data3 = new Dataframe(tab3);
-			assertEquals(4, data3.getMaxSizeSeries());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Dataframe data3 = new Dataframe(tab3);
+		assertEquals(4, data3.getMaxSizeSeries());
 
 		Object[][] tab4 = { { "Tab1", 3, 4 }, { "Tab2", 2, 4, 5 } };
-		Dataframe data4;
-		try {
-			data4 = new Dataframe(tab4);
-			assertEquals(3, data4.getMaxSizeSeries());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Dataframe data4 = new Dataframe(tab4);
+		assertEquals(3, data4.getMaxSizeSeries());
 
 		Object[][] tab5 = { { "Tab1" }, { "Tab2" } };
-		Dataframe data5;
-		try {
-			data5 = new Dataframe(tab5);
-			assertEquals(0, data5.getMaxSizeSeries());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		Dataframe data5 = new Dataframe(tab5);
+		assertEquals(0, data5.getMaxSizeSeries());
 	}
 
 	@Test
@@ -198,67 +166,45 @@ public class TestDataframe {
 	}
 
 	@Test
-	public void testprintDataframe() {
+	public void testprintDataframe() throws Exception {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
-		Dataframe data;
-		try {
-			data = new Dataframe(tab1);
-			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
+		Dataframe data = new Dataframe(tab1);
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
 					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframe());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Test
-	public void testprintDataframeFirstLines() {
+	public void testprintDataframeFirstLines() throws Exception {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
-		Dataframe data;
-		try {
-			data = new Dataframe(tab1);
+		Dataframe data = new Dataframe(tab1);
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(0));
 
-			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(0));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n", data.printDataframeFirstLines(1));
 
-			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n", data.printDataframeFirstLines(1));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n",
+				data.printDataframeFirstLines(2));
 
-			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n",
-					data.printDataframeFirstLines(2));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
+				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeFirstLines(152));
 
-			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
-					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeFirstLines(152));
-
-			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(-1));
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(-1));
 	}
 
 	@Test
-	public void testprintDataframeLastLines() {
+	public void testprintDataframeLastLines() throws Exception {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
-		Dataframe data;
-		try {
-			data = new Dataframe(tab1);
+		Dataframe data = new Dataframe(tab1);
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(0));
 
-			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(0));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(1));
 
-			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(1));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n",
+				data.printDataframeLastLines(2));
 
-			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n",
-					data.printDataframeLastLines(2));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
+				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(152));
 
-			assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
-					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(152));
-
-			assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(-1));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(-1));
 	}
 
 	@Test
@@ -573,29 +519,220 @@ public class TestDataframe {
 	}
 
 	@Test
-	public void testToTab() {
+	public void testToTab() throws Exception {
 		Dataframe dataframe = new Dataframe();
-		try {
-			int hauteur = 201;
-			int largeur = 3;
-			remplirFile(largeur, hauteur, PATH);
-			String[][] all = new String[201][3];
-			String[] contenu = { "FILE", "VALUE1", "VALUE2" };
-			all[0] = contenu;
-			for (int i = 0; i < 200; i++) {
-				String[] toAdd = { Integer.toString(i), Integer.toString(i * 2), Integer.toString(i * 3) };
-				all[i + 1] = toAdd;
-			}
-
-			String[][] tab = dataframe.toTab(PATH);
-			for (int i = 0; i < 201; i++) {
-				for (int j = 0; j < 3; j++) {
-					assertEquals(" verification a l'indice " + i + "" + j + ".", all[i][j], tab[i][j]);
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		int hauteur = 201;
+		int largeur = 3;
+		remplirFile(largeur, hauteur, PATH);
+		String[][] all = new String[201][3];
+		String[] contenu = { "FILE", "VALUE1", "VALUE2" };
+		all[0] = contenu;
+		for (int i = 0; i < 200; i++) {
+			String[] toAdd = { Integer.toString(i), Integer.toString(i * 2), Integer.toString(i * 3) };
+			all[i + 1] = toAdd;
 		}
+
+		String[][] tab = dataframe.toTab(PATH);
+		for (int i = 0; i < 201; i++) {
+			for (int j = 0; j < 3; j++) {
+				assertEquals(" verification a l'indice " + i + "" + j + ".", all[i][j], tab[i][j]);
+			}
+		}
+	}
+	
+
+
+	// Test methodes MeanEachColumn & MeanColumn
+	
+	@Test
+	public void testMeanCol() throws Exception {
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(2.5, (double) data1.getMeanColumn(0), 0);
+	}
+
+	@Test
+	public void testMeanColZero() throws Exception {
+		Object[][] tab1 = { { "Tab1", 0, 0, 0, 0 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(0.0, (double) data1.getMeanColumn(0), 0);
+	}
+
+	@Test
+	public void testMeanColNeg() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, -4, -3 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(-2.5, (double) data1.getMeanColumn(0), 0);
+	}
+
+	@Test
+	public void testMeanAll() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(0.0, (double) data1.getMeanColumn(0), 0);
+	}
+
+	@Test
+	public void testMeanEachCol() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 } };
+		Dataframe data1 = new Dataframe(tab1);
+		ArrayList<Series> res = data1.getMeanEachColumn().getDataframe();
+		assertEquals(0.0, (double) res.get(0).getElem(0), 0);
+		assertEquals(45.4875, (double) res.get(1).getElem(0), 0.0001);
+	}
+
+	@Test
+	public void testMeanEachColVide() throws Exception {
+		Object[][] tab1 = { { "Tab1" } };
+		Dataframe data1 = new Dataframe(tab1);
+		ArrayList<Series> res = data1.getMeanEachColumn().getDataframe();
+		assertEquals("null", res.get(0).getElem(0));
+	}
+
+	// Test methodes MaxEachColumn & MaxColumn
+
+	@Test
+	public void testMaxCol() throws Exception {
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(4.0, (double) data1.getMaxColumn(0), 0);
+	}
+
+	@Test
+	public void testMaxColZero() throws Exception {
+		Object[][] tab1 = { { "Tab1", 0, 0, 0, 0 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(0.0, (double) data1.getMaxColumn(0), 0);
+	}
+
+	@Test
+	public void testMaxColNeg() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, -4, -3 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(-1.0, (double) data1.getMaxColumn(0), 0);
+	}
+
+	@Test
+	public void testMaxAll() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(2.0, (double) data1.getMaxColumn(0), 0);
+	}
+
+	@Test
+	public void testMaxEachCol() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 },
+				{ "Tab3", -0.5, -178.6, -1.65, -1.2 } };
+		Dataframe data1 = new Dataframe(tab1);
+		ArrayList<Series> res = data1.getMaxEachColumn().getDataframe();
+		assertEquals(2.0, (double) res.get(0).getElem(0), 0);
+		assertEquals(178.6, (double) res.get(1).getElem(0), 0);
+		assertEquals(-0.5, (double) res.get(2).getElem(0), 0);
+	}
+
+	@Test
+	public void testMaxEachColVide() throws Exception {
+		Object[][] tab1 = { { "Tab1" } };
+		Dataframe data1 = new Dataframe(tab1);
+		ArrayList<Series> res = data1.getMaxEachColumn().getDataframe();
+		assertEquals("null", res.get(0).getElem(0));
+	}
+	
+	// Test methodes MinEachColumn & MinColumn
+	
+	@Test
+	public void testMinCol() throws Exception {
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(1.0, (double) data1.getMinColumn(0), 0);
+	}
+
+	@Test
+	public void testMinColZero() throws Exception {
+		Object[][] tab1 = { { "Tab1", 0, 0, 0, 0 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(0.0, (double) data1.getMinColumn(0), 0);
+	}
+
+	@Test
+	public void testMinColNeg() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, -4, -3 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(-4.0, (double) data1.getMinColumn(0), 0);
+	}
+
+	@Test
+	public void testMinAll() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(-2.0, (double) data1.getMinColumn(0), 0);
+	}
+	
+	@Test
+	public void testgetMinEachCol() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 },
+				{ "Tab3", -0.5, -178.6, -1.65, -1.2 } };
+		Dataframe data1 = new Dataframe(tab1);
+		ArrayList<Series> res = data1.getMinEachColumn().getDataframe();
+		assertEquals(-2.0, (double) res.get(0).getElem(0), 0);
+		assertEquals(0.5, (double) res.get(1).getElem(0), 0);
+		assertEquals(-178.6, (double) res.get(2).getElem(0), 0);
+	}
+	
+	@Test
+	public void testMinEachColVide() throws Exception {
+		Object[][] tab1 = { { "Tab1" } };
+		Dataframe data1 = new Dataframe(tab1);
+		ArrayList<Series> res = data1.getMinEachColumn().getDataframe();
+		assertEquals("null", res.get(0).getElem(0));
+	}
+
+	// Test methodes SdEachColumn & SdColumn
+	
+	@Test
+	public void testSdCol() throws Exception {
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(1.87, (double) data1.getSdColumn(0), 0);
+	}
+
+	@Test
+	public void testSdColZero() throws Exception {
+		Object[][] tab1 = { { "Tab1", 0, 0, 0, 0 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(0.0, (double) data1.getSdColumn(0), 0);
+	}
+
+	@Test
+	public void testSdColNeg() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, -4, -3 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(1.87, (double) data1.getSdColumn(0), 0);
+	}
+
+	@Test
+	public void testSdAll() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals(2.45, (double) data1.getSdColumn(0), 0);
+	}
+	
+	@Test
+	public void testgetSdEachCol() throws Exception {
+		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 },
+				{ "Tab3", -0.5, -178.6, -1.65, -1.2 } };
+		Dataframe data1 = new Dataframe(tab1);
+		ArrayList<Series> res = data1.getSdEachColumn().getDataframe();
+		assertEquals(2.45, (double) res.get(0).getElem(0), 0);
+		assertEquals(89.05, (double) res.get(1).getElem(0), 0);
+		assertEquals(153.71, (double) res.get(2).getElem(0), 0);
+	}
+	
+	@Test
+	public void testSdEachColVide() throws Exception {
+		Object[][] tab1 = { { "Tab1" } };
+		Dataframe data1 = new Dataframe(tab1);
+		ArrayList<Series> res = data1.getSdEachColumn().getDataframe();
+		assertEquals("null", res.get(0).getElem(0));
 	}
 }
