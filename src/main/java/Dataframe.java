@@ -22,14 +22,14 @@ public class Dataframe {
 
 	private ArrayList<Series> dataframe;
 
-	protected final String FLOAT = "FLOAT";
+	protected final String DOUBLE = "DOUBLE";
 	protected final String INTEGER = "Integer";
 	protected final String STRING = "String";
 
 	// Separateur, afin de pouvoir lire tous les types de fichiers CSV
 	private String splitter = " ";
 
-	// Representation de la vigule pour split les floats
+	// Representation de la vigule pour split les doubles
 	private String VIRGULE = ",";
 
 	public Dataframe() {
@@ -55,8 +55,8 @@ public class Dataframe {
 					ajoutColonne("String", c);
 				else if (elem instanceof Integer)
 					ajoutColonne("Integer", c);
-				else if (elem instanceof Float)
-					ajoutColonne("Float", c);
+				else if (elem instanceof Double)
+					ajoutColonne("Double", c);
 				else if (elem == null)
 					ajoutColonne("null", c);
 				else
@@ -73,14 +73,6 @@ public class Dataframe {
 	public Dataframe(String PATH) throws Exception {
 		this.splitter = ";";
 		initialisation(toTab(PATH));
-	}
-
-	/**
-	 * @param arguments tableau a deux dimensions de chaine de caracteres
-	 *
-	 */
-	public Dataframe(String[][] arguments) {
-		initialisation(arguments);
 	}
 
 	public void afficheDataframe() {
@@ -100,61 +92,69 @@ public class Dataframe {
 	 * @throws PandaNoData            colonne vide
 	 * @throws PandaNotSupported      type non supporte
 	 */
+	@SuppressWarnings("unchecked")
 	private void ajoutColonne(String type, Object[] c) throws Exception {
-		switch (type) {
-		case "String":
-			Series<String> s = new Series<>();
-			for (int i = 0; i < c.length; i++) {
-				if (i == 0)
-					s.setName((String) c[0]);
-				else if (c[i] instanceof String || c[i] == null)
-					s.add((String) c[i]);
-				else
-					throw new PandaCannotInstanciate();
-			}
-			dataframe.add(s);
-			break;
-		case "Integer":
-			Series<Integer> si = new Series<>();
-			for (int i = 0; i < c.length; i++) {
-				if (i == 0)
-					si.setName((String) c[0]);
-				else if (c[i] instanceof Integer || c[i] == null)
-					si.add((Integer) c[i]);
-				else
-					throw new PandaCannotInstanciate();
-			}
-			dataframe.add(si);
-			break;
-		case "null":
-			int j = 2;
-			while (j < c.length && c[j] == null)
-				j++;
-			if (j >= c.length)
-				throw new PandaNoData();
-			if (c[j] instanceof String)
-				ajoutColonne("String", c);
-			else if (c[j] instanceof Integer)
-				ajoutColonne("Integer", c);
-			else if (c[j] instanceof Float)
-				ajoutColonne("Float", c);
-			else
-				throw new PandaNotSupported();
-			break;
-		default:
-			Series<Float> sf = new Series<>();
-			for (int i = 0; i < c.length; i++) {
-				if (i == 0)
-					sf.setName((String) c[0]);
-				else if (c[i] instanceof Float || c[i] == null)
-					sf.add((Float) c[i]);
-				else
-					throw new PandaCannotInstanciate();
-			}
-			dataframe.add(sf);
-		}
-	}
-
+        switch (type) {
+        case "String":
+            Series<String> s = new Series<>();
+            for (int i = 0; i < c.length; i++) {
+                if (i == 0)
+                    s.setName((String) c[0]);
+                else if (c[i] instanceof String || c[i] == null)
+                    s.add((String) c[i]);
+                else
+                    throw new PandaCannotInstanciate();
+            }
+            dataframe.add(s);
+            break;
+        case "Integer":
+            Series<Integer> si = new Series<>();
+            for (int i = 0; i < c.length; i++) {
+                if (i == 0)
+                    si.setName((String) c[0]);
+                else if (c[i] instanceof Integer || c[i] == null)
+                    si.add((Integer) c[i]);
+                else 
+                    throw new PandaCannotInstanciate();
+            }
+            dataframe.add(si);
+            break;
+        case "null":
+            int j = 2;
+            while (j < c.length && c[j] == null)
+                j++;
+            if (j >= c.length) {
+                Series sn = new Series();
+                for (int i = 0; i < c.length; i++) {
+                    if (i == 0)
+                        sn.setName((String) c[0]);
+                    else
+                        sn.add(null);
+                }
+                dataframe.add(sn);
+            }
+            else if (c[j] instanceof String)
+                ajoutColonne("String", c);
+            else if (c[j] instanceof Integer)
+                ajoutColonne("Integer", c);
+            else if (c[j] instanceof Double)
+                ajoutColonne("Double", c);
+            else
+                throw new PandaNotSupported();
+            break;
+        default:
+            Series<Double> sf = new Series<>();
+            for (int i = 0; i < c.length; i++) {
+                if (i == 0)
+                    sf.setName((String) c[0]);
+                else if (c[i] instanceof Double || c[i] == null)
+                    sf.add((Double) c[i]);
+                else 
+                    throw new PandaCannotInstanciate();
+            }
+            dataframe.add(sf);
+        }
+    }
 	/**
 	 * @param s         Le Series a mettre a jour,
 	 * @param arguments les valeurs
@@ -207,8 +207,8 @@ public class Dataframe {
 			case STRING:
 				s = new Series<String>();
 				break;
-			case FLOAT:
-				s = new Series<Float>();
+			case DOUBLE:
+				s = new Series<Double>();
 				break;
 			default:
 				System.err.println("LA COLONNE " + i + " CONTIENT UN TYPE INCONNU");
@@ -224,9 +224,9 @@ public class Dataframe {
 	/**
 	 *
 	 * @param valeur
-	 * @return 1 si valeur est un float, 0 sinon
+	 * @return 1 si valeur est un double, 0 sinon
 	 */
-	public boolean isFloat(String valeur) {
+	public boolean isDouble(String valeur) {
 		String[] all = valeur.split(VIRGULE);
 
 		return all.length == 2 && isInt(all[0]) && isInt(all[1]);
@@ -500,8 +500,8 @@ public class Dataframe {
 		if (isInt(valeur))
 			return INTEGER;
 
-		if (isFloat(valeur))
-			return FLOAT;
+		if (isDouble(valeur))
+			return DOUBLE;
 
 		return STRING;
 

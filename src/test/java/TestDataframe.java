@@ -56,7 +56,7 @@ public class TestDataframe {
 				data[2][i] = i;
 				data[3][i] = i * 10;
 				data[4][i] = Integer.toString(i * 10);
-				data[5][i] = (float) i * 10;
+				data[5][i] = (double) i * 10;
 				data[6][i] = i * 100;
 				data[7][i] = Integer.toString(i * 100);
 			}
@@ -76,8 +76,8 @@ public class TestDataframe {
 		assertEquals(dataframe.type(listeInt), d.INTEGER);
 		String[] listeString = { "a", "b", "b" };
 		assertEquals(dataframe.type(listeString), d.STRING);
-		String[] listeFloat = { "0,1", "0,2", "0,2" };
-		assertEquals(dataframe.type(listeFloat), d.FLOAT);
+		String[] listeDouble = { "0,1", "0,2", "0,2" };
+		assertEquals(dataframe.type(listeDouble), d.DOUBLE);
 	}
 
 	@Test(expected = TooManyDataException.class)
@@ -178,13 +178,13 @@ public class TestDataframe {
 	}
 
 	@Test
-	public void testIsFloat() throws Exception {
+	public void testIsDouble() throws Exception {
 		String s = "0";
-		assertFalse(d.isFloat(s));
+		assertFalse(d.isDouble(s));
 		s = "0,2";
-		assertTrue(d.isFloat(s));
+		assertTrue(d.isDouble(s));
 		s = "BLABLA";
-		assertFalse(d.isFloat(s));
+		assertFalse(d.isDouble(s));
 	}
 
 	@Test
