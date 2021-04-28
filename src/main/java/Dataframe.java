@@ -188,6 +188,9 @@ public class Dataframe {
 		return dataframe;
 	}
 
+	/**
+	 * @return Taille de la plus longue colonne du dataframe
+	 */
 	public int getMaxSizeSeries() {
 		int max = 0;
 		for (Series series : dataframe) {
@@ -201,9 +204,14 @@ public class Dataframe {
 		return liste[0][colonneActuelle];
 	}
 	
-	public Object getMeanColumn(int index) {
-		if(index < dataframe.size()) {
-			Series<?> s = dataframe.get(index);
+	/**
+	 * @param indice de la colonne
+	 * @return moyenne de la colonne d'indice "indice"
+	 * <br> si indice > size => NaN
+	 */
+	public Object getMeanColumn(int indice) {
+		if(indice < dataframe.size()) {
+			Series<?> s = dataframe.get(indice);
 			if (s.getSize() > 0 && s.getElem(0) instanceof String)
 				return "NaN";
 			double mean = 0;
@@ -218,6 +226,11 @@ public class Dataframe {
 		return "NaN";
 	}
 	
+	/**
+	 * @return Nouveau dataframe contenant la moyenne pour chaque colonne
+	 * <br>Moyenne d'une colonne String => NaN
+	 * <br>Moyenne d'une colonne vide => null
+	 */
 	public Dataframe getMeanEachColumn() {
 		Dataframe dataframe_mean = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
@@ -242,12 +255,20 @@ public class Dataframe {
 		return dataframe_mean;
 	}
 	
+	/**
+	 * @param s -> nouvelle Series (colonne) à ajouter au dataframe 
+	 */
 	private void ajoutSeries(Series<?> s) {
 		if(dataframe==null)
 			dataframe = new ArrayList<>();
 		this.dataframe.add(s);
 	}
 	
+	/**
+	 * @param indice de la colonne
+	 * @return max de la colonne d'indice "indice"
+	 * <br> si indice > size => NaN
+	 */
 	public Object getMaxColumn(int index) {
 		if(index < dataframe.size()) {
 			Series<?> s = dataframe.get(index);
@@ -270,6 +291,11 @@ public class Dataframe {
 		return "NaN";
 	}
 	
+	/**
+	 * @return Nouveau dataframe contenant la valeur max pour chaque colonne
+	 * <br>Max d'une colonne String => NaN
+	 * <br>Max d'une colonne vide => null
+	 */
 	public Dataframe getMaxEachColumn() {
 		Dataframe dataframe_max = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
@@ -294,6 +320,11 @@ public class Dataframe {
 		return dataframe_max;
 	}
 	
+	/**
+	 * @param indice de la colonne
+	 * @return min de la colonne d'indice "indice"
+	 * <br> si indice > size => NaN
+	 */
 	public Object getMinColumn(int index) {
 		if(index < dataframe.size()) {
 			Series<?> s = dataframe.get(index);
@@ -316,6 +347,11 @@ public class Dataframe {
 		return "NaN";
 	}
 	
+	/**
+	 * @return Nouveau dataframe contenant la valeur min pour chaque colonne
+	 * <br>Min d'une colonne String => NaN
+	 * <br>Min d'une colonne vide => null
+	 */
 	public Dataframe getMinEachColumn() {
 		Dataframe dataframe_min = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
@@ -340,6 +376,11 @@ public class Dataframe {
 		return dataframe_min;
 	}
 	
+	/**
+	 * @param indice de la colonne
+	 * @return ecart type de la colonne d'indice "indice"
+	 * <br> si indice > size => NaN
+	 */
 	public Object getSdColumn(int index) {
 		if(index < dataframe.size()) {
 			Series<?> s = dataframe.get(index);
@@ -361,6 +402,11 @@ public class Dataframe {
 		return "NaN";
 	}
 	
+	/**
+	 * @return Nouveau dataframe contenant l'écart type pour chaque colonne
+	 * <br>Ecart type d'une colonne String => NaN
+	 * <br>Ecart type d'une colonne vide => null
+	 */
 	public Dataframe getSdEachColumn() {
 		Dataframe dataframe_sd = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
@@ -385,9 +431,15 @@ public class Dataframe {
 		return dataframe_sd;
 	}
 
-	public Dataframe splitPercent_SortedData(double percent) {
-		if(percent < 0 || percent > 100) //TODO Exception 
-			return null;
+	/**
+	 * @param pourcentage de decoupage des colonnes du dataframe
+	 * <br> si pourcentage > 100 ou < 0 alors pourcentage sera automatiquement mis à 0
+	 * @return Nouveau dataframe ayant le double des colonnes initiales et contenant le pourcentage de valeurs (préalablement trié par ordre croissant) de chaque colonne en partant du début et de la fin
+	 * <br><u>Ex :</u> [[5,9,1,2,3,7,8,4,6,0]] avec pourcentage = 34% | <u>Retourne :</u> [[0,1,2], [7,8,9]]
+	 */
+	public Dataframe splitPercent_SortedData(double pourcentage) {
+		if(pourcentage < 0 || pourcentage > 100) //TODO Exception 
+			pourcentage = 0;
 		Dataframe dataframeSplited = new Dataframe();
 		for (int i = 0; i < dataframe.size(); i++) {
 			Series<?> s = dataframe.get(i);
@@ -397,7 +449,7 @@ public class Dataframe {
 			ArrayList<Object> sStart = new ArrayList<>();
 			ArrayList<Object> sEnd = new ArrayList<>();
 			//On recupere le nombre de valeurs qu'on devra copier
-			int limit = (int) Math.floor(ssorted.size() * (percent/100));
+			int limit = (int) Math.floor(ssorted.size() * (pourcentage/100));
 			//On copie les valeurs
 			for (int j = 0; j < limit; j++) {
 				sStart.add(ssorted.get(j));
@@ -485,6 +537,12 @@ public class Dataframe {
 		return selectionLignes(l);
 	}
 
+	/**
+	 * 
+	 * @param min -> ligne à partir de laquelle on doit afficher
+	 * @param max -> ligne à partir de laquelle on doit s'arrêter d'afficher
+	 * @return chaine de charactere à afficher
+	 */
 	private String printCore(int min, int max) {
 		String out = "";
 		for (int i = min; i < max; i++) {
@@ -500,20 +558,36 @@ public class Dataframe {
 		return out;
 	}
 
+	/**
+	 * @return chaine de charactere contenant l'ensemble du dataframe à afficher
+	 */
 	public String printDataframe() {
 		return printHeader() + printCore(0, getMaxSizeSeries());
 	}
 
+	/**
+	 * @param nb -> Nombre de ligne à afficher depuis le début
+	 * <br> Si nb > la taille max possible alors nb = taille max possible
+	 * @return chaine de charactere à afficher
+	 */
 	public String printDataframeFirstLines(int nb) {
 		int max = getMaxSizeSeries();
 		return printHeader() + printCore(0, nb > max ? max : nb);
 	}
 
+	/**
+	 * @param nb -> Nombre de ligne à afficher depuis la fin
+	 * <br> Si nb > la taille max possible alors nb = taille max possible
+	 * @return chaine de charactere à afficher
+	 */
 	public String printDataframeLastLines(int nb) {
 		int max = getMaxSizeSeries();
 		return printHeader() + printCore(nb < max ? max - nb : 0, max);
 	}
 
+	/**
+	 * @return chaine de charactere contenant l'entete du dataframe à afficher (nom de chaque colonne)
+	 */
 	private String printHeader() {
 		String out;
 		out = "Index\t\t";
