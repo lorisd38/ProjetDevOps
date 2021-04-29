@@ -1,0 +1,10 @@
+Series.class
+exception\TooManyDataException.class
+exception\PandaCannotInstanciate.class
+exception\PandaExceptions.class
+Dataframe.class
+exception\TooManyValueException.class
+exception\PandaNoData.class
+exception\PandaNotSupported.class
+exception\PandaOutOfBound.class
+exception\PandaNameNotFound.class
