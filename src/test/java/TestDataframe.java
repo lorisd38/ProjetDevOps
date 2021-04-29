@@ -72,12 +72,9 @@ public class TestDataframe {
 	@Test
 	public void testAjout() {
 		Dataframe dataframe = new Dataframe();
-		String[] listeInt = { "1", "2", "3" };
-		assertEquals(dataframe.type(listeInt), d.INTEGER);
-		String[] listeString = { "a", "b", "b" };
-		assertEquals(dataframe.type(listeString), d.STRING);
-		String[] listeDouble = { "0,1", "0,2", "0,2" };
-		assertEquals(dataframe.type(listeDouble), d.DOUBLE);
+		assertEquals(dataframe.type("1"), d.INTEGER);
+		assertEquals(dataframe.type("listeString"), d.STRING);
+		assertEquals(dataframe.type("0,1"), d.DOUBLE);
 	}
 
 	@Test(expected = TooManyDataException.class)
@@ -109,7 +106,7 @@ public class TestDataframe {
 	}
 
 	@Test
-	public void testgetMaxSizeSeries() throws Exception {
+	public void testgetMaxSizeSeries() throws PandaExceptions {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2" } };
 		Dataframe data1 = new Dataframe(tab1);
 		assertEquals(4, data1.getMaxSizeSeries());
@@ -143,6 +140,32 @@ public class TestDataframe {
 		for (int i = 0; i < 3; i++) {
 			assertEquals(contenu[i], d.getName(all, i));
 		}
+	}
+	
+	@Test
+	public void testGroupBy() throws Exception {
+	   for (int i = 1; i < nbLignes; i++) {
+	       if (i > 0 && i < 3) data[0][i] = 1;
+	       else if (i >= 3 && i < 5) data[0][i] = 20;
+	       else if (i >= 5 && i < 7) data[0][i] = 300;
+	       else if (i >= 7) data[0][i] = 20;
+	   }
+	   d = new Dataframe(data);
+	   GroupBy dGroupBy = d.groupBy("A");
+	   int nbLigne = 0;
+	   for (Dataframe dataframe : dGroupBy.getAll()) {
+	       assertEquals(nbColonnes, dataframe.getDataframe().size());
+	       for (Series s : dataframe.getDataframe()) {
+	            if (s.getName().equals("A")) {
+	               Object ref = s.getColumn().get(0);
+	               for (Object o : s.getColumn()) {
+	                   nbLigne++;
+	                   assertEquals(ref, o);
+	               }
+	           }
+	       }
+	   }
+	   assertEquals(nbLignes, nbLigne);
 	}
 
 	@Test
@@ -517,6 +540,39 @@ public class TestDataframe {
 		ArrayList<Boolean> tab = new ArrayList<>();
 		d.selectionMasque(tab);
 	}
+	
+	@Test
+	public void testSelectionParObjet() throws Exception {
+		FileWriter fw = new FileWriter(PATH);
+		fw.append("FILE;VALUE1;VALUE2\n");
+		for (int i = 0; i < 50; i++) {
+			for (int j = 1; j <= 3; j++) {
+				fw.append(i % 3 + ";");
+			}
+			fw.append("\n");
+		}
+		fw.close();
+		Dataframe d = new Dataframe(PATH);
+		Dataframe newData;
+		newData = d.selectionParObjet("VALUE1", "0");
+		for (Series s : newData.getDataframe()) {
+			for (Object o : s.getColumn())
+				assertEquals("0", o);
+			assertEquals(s.getSize(), 51 / 3);
+		}
+		newData = d.selectionParObjet("VALUE1", "1");
+		for (Series s : newData.getDataframe()) {
+			for (Object o : s.getColumn()) {
+				assertEquals("1", o);
+			}
+		}
+		newData = d.selectionParObjet("VALUE1", "2");
+		for (Series s : newData.getDataframe()) {
+			for (Object o : s.getColumn()) {
+				assertEquals("2", o);
+			}
+		}
+	}
 
 	@Test
 	public void testToTab() throws Exception {
@@ -539,8 +595,6 @@ public class TestDataframe {
 			}
 		}
 	}
-	
-
 
 	// Test methodes MeanEachColumn & MeanColumn
 	
