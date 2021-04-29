@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import exception.PandaCannotInstanciate;
 import exception.PandaExceptions;
@@ -19,7 +21,6 @@ import exception.TooManyValueException;
 
 @SuppressWarnings("rawtypes")
 public class Dataframe {
-
 	private ArrayList<Series> dataframe;
 
 	protected final String DOUBLE = "DOUBLE";
@@ -35,7 +36,7 @@ public class Dataframe {
 	public Dataframe() {
 		this.splitter = ";";
 	}
-
+  
 	/**
 	 * @param tableau d'objets a deux dimensions
 	 * @throws PandaNoData       tableau vide ou colonne vide
@@ -65,7 +66,7 @@ public class Dataframe {
 				throw new PandaNoData();
 		}
 	}
-
+  
 	/**
 	 * @param PATH le chemin vers un csv
 	 */
@@ -192,7 +193,7 @@ public class Dataframe {
     }
 
 	/**
-	 * @return le nombre maximal d'elements dans une colonne
+	 * @return Taille de la plus longue colonne du dataframe
 	 */
 	public int getMaxSizeSeries() {
 		int max = 0;
@@ -202,59 +203,317 @@ public class Dataframe {
 		}
 		return max;
 	}
-
+  
 	public String getName(String[][] liste, int colonneActuelle) {
 		return liste[0][colonneActuelle];
 	}
 	
 	/**
-     * @param name - le nom sur le quel les donnees seront groupee
-     * @return GroupBy - Un ensemble de dataframe groupe par name
-     * @throw PandaExceptions si le nom n'est pas bon 
-     */
-    public GroupBy groupBy(String name) throws PandaExceptions {
-        GroupBy toRet = new GroupBy();
-        int indiceCol = getIndiceCol(name);
-        ArrayList<Object> ao = new ArrayList<Object>();
-        for (Object o : this.dataframe.get(indiceCol).getColumn()) {
-            if (!ao.contains(o)) {
-                toRet.add(selectionParObjet(name, o));
-                ao.add(o);
-            }
-        }
-        return toRet;
-    }
+   * @param name - le nom sur le quel les donnees seront groupee
+   * @return GroupBy - Un ensemble de dataframe groupe par name
+   * @throw PandaExceptions si le nom n'est pas bon 
+   */
+  public GroupBy groupBy(String name) throws PandaExceptions {
+      GroupBy toRet = new GroupBy();
+      int indiceCol = getIndiceCol(name);
+      ArrayList<Object> ao = new ArrayList<Object>();
+      for (Object o : this.dataframe.get(indiceCol).getColumn()) {
+          if (!ao.contains(o)) {
+              toRet.add(selectionParObjet(name, o));
+              ao.add(o);
+          }
+      }
+      return toRet;
+  }
+
+  /**
+	 * @param indice de la colonne
+	 * @return moyenne de la colonne d'indice "indice"
+	 * <br> si indice > size => NaN
+	 */
+	public Object getMeanColumn(int indice) {
+		if(indice < dataframe.size()) {
+			Series<?> s = dataframe.get(indice);
+			if (s.getSize() > 0 && s.getElem(0) instanceof String)
+				return "NaN";
+			double mean = 0;
+			for (int i = 0; i < s.getSize(); i++) {
+				if (s.getElem(i) instanceof Double)
+					mean += (Double) s.getElem(i);
+				else if (s.getElem(i) instanceof Integer)
+					mean += (Integer) s.getElem(i);
+			}
+			return mean / s.getSize();
+		} 
+		return "NaN";
+	}
+	
+	/**
+	 * @return Nouveau dataframe contenant la moyenne pour chaque colonne
+	 * <br>Moyenne d'une colonne String => NaN
+	 * <br>Moyenne d'une colonne vide => null
+	 */
+	public Dataframe getMeanEachColumn() {
+		Dataframe dataframe_mean = new Dataframe();
+		for (int i = 0; i < dataframe.size(); i++) {
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Double || s.getElem(0) instanceof Integer)) {
+				Series<Double> serie_mean = new Series<>();
+				serie_mean.setName(dataframe.get(i).getName());
+				serie_mean.getColumn().add((Double) getMeanColumn(i));
+				dataframe_mean.ajoutSeries(serie_mean);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_mean = new Series<>();
+				serie_mean.setName(dataframe.get(i).getName());
+				serie_mean.getColumn().add((String) getMeanColumn(i));
+				dataframe_mean.ajoutSeries(serie_mean);
+			} else {
+				Series<String> serie_null = new Series<>();
+				serie_null.setName(dataframe.get(i).getName());
+				serie_null.getColumn().add("null");
+				dataframe_mean.ajoutSeries(serie_null);
+			}
+		}
+		return dataframe_mean;
+	}
+	
+	/**
+	 * @param s -> nouvelle Series (colonne) à ajouter au dataframe 
+	 */
+	private void ajoutSeries(Series<?> s) {
+		if(dataframe==null)
+			dataframe = new ArrayList<>();
+		this.dataframe.add(s);
+	}
+	
+	/**
+	 * @param indice de la colonne
+	 * @return max de la colonne d'indice "indice"
+	 * <br> si indice > size => NaN
+	 */
+	public Object getMaxColumn(int index) {
+		if(index < dataframe.size()) {
+			Series<?> s = dataframe.get(index);
+			double max = 0;
+			if (s.getSize() > 0 && s.getElem(0) instanceof Double)
+				max = (Double) s.getElem(0);
+			else if (s.getSize() > 0 && s.getElem(0) instanceof Integer)
+				max = (Integer) s.getElem(0);
+			else if (s.getSize() > 0 && s.getElem(0) instanceof String)
+				return "Nan";
+			
+			for (int i = 0; i < s.getSize(); i++) {
+				if (s.getElem(i) instanceof Double)
+					max = max > (Double) s.getElem(i) ? max : (Double) s.getElem(i);
+				else if (s.getElem(i) instanceof Integer)
+					max = max > (Integer) s.getElem(i) ? max : (Integer) s.getElem(i);
+			}
+			return max;
+		}
+		return "NaN";
+	}
+	
+	/**
+	 * @return Nouveau dataframe contenant la valeur max pour chaque colonne
+	 * <br>Max d'une colonne String => NaN
+	 * <br>Max d'une colonne vide => null
+	 */
+	public Dataframe getMaxEachColumn() {
+		Dataframe dataframe_max = new Dataframe();
+		for (int i = 0; i < dataframe.size(); i++) {
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Double || s.getElem(0) instanceof Integer)) {
+				Series<Double> serie_max = new Series<>();
+				serie_max.setName(dataframe.get(i).getName());
+				serie_max.getColumn().add((Double) getMaxColumn(i));
+				dataframe_max.ajoutSeries(serie_max);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_max = new Series<>();
+				serie_max.setName(dataframe.get(i).getName());
+				serie_max.getColumn().add((String) getMaxColumn(i));
+				dataframe_max.ajoutSeries(serie_max);
+			} else {
+				Series<String> serie_null = new Series<>();
+				serie_null.setName(dataframe.get(i).getName());
+				serie_null.getColumn().add("null");
+				dataframe_max.ajoutSeries(serie_null);
+			}
+		}
+		return dataframe_max;
+	}
+	
+	/**
+	 * @param indice de la colonne
+	 * @return min de la colonne d'indice "indice"
+	 * <br> si indice > size => NaN
+	 */
+	public Object getMinColumn(int index) {
+		if(index < dataframe.size()) {
+			Series<?> s = dataframe.get(index);
+			double min = 0;
+			if (s.getSize() > 0 && s.getElem(0) instanceof Double)
+				min = (Double) s.getElem(0);
+			else if (s.getSize() > 0 && s.getElem(0) instanceof Integer)
+				min = (Integer) s.getElem(0);
+			else if (s.getSize() > 0 && s.getElem(0) instanceof String)
+				return "Nan";
+			
+			for (int i = 0; i < s.getSize(); i++) {
+				if (s.getElem(i) instanceof Double)
+					min = min < (Double) s.getElem(i) ? min : (Double) s.getElem(i);
+				else if (s.getElem(i) instanceof Integer)
+					min = min < (Integer) s.getElem(i) ? min : (Integer) s.getElem(i);
+			}
+			return min;
+		}
+		return "NaN";
+	}
+	
+	/**
+	 * @return Nouveau dataframe contenant la valeur min pour chaque colonne
+	 * <br>Min d'une colonne String => NaN
+	 * <br>Min d'une colonne vide => null
+	 */
+	public Dataframe getMinEachColumn() {
+		Dataframe dataframe_min = new Dataframe();
+		for (int i = 0; i < dataframe.size(); i++) {
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Double || s.getElem(0) instanceof Integer)) {
+				Series<Double> serie_min = new Series<>();
+				serie_min.setName(dataframe.get(i).getName());
+				serie_min.getColumn().add((Double) getMinColumn(i));
+				dataframe_min.ajoutSeries(serie_min);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_min = new Series<>();
+				serie_min.setName(dataframe.get(i).getName());
+				serie_min.getColumn().add((String) getMinColumn(i));
+				dataframe_min.ajoutSeries(serie_min);
+			} else {
+				Series<String> serie_null = new Series<>();
+				serie_null.setName(dataframe.get(i).getName());
+				serie_null.getColumn().add("null");
+				dataframe_min.ajoutSeries(serie_null);
+			}
+		}
+		return dataframe_min;
+	}
+	
+	/**
+	 * @param indice de la colonne
+	 * @return ecart type de la colonne d'indice "indice"
+	 * <br> si indice > size => NaN
+	 */
+	public Object getSdColumn(int index) {
+		if(index < dataframe.size()) {
+			Series<?> s = dataframe.get(index);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Double || s.getElem(0) instanceof Integer)) {
+				double mean = (double) getMinColumn(index);
+				double standardDeviation  = 0;
+				for (int i = 0; i < s.getSize(); i++) {
+					if (s.getElem(i) instanceof Double)
+						standardDeviation  += Math.pow((Double) s.getElem(i) - mean, 2);
+					else if (s.getElem(i) instanceof Integer)
+						standardDeviation  += Math.pow((Integer) s.getElem(i) - mean, 2);
+				}
+				double res = (double) Math.sqrt(standardDeviation  / s.getSize());
+				return (double) Math.round(res * 100) / 100;
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				return "NaN";
+			}
+		}
+		return "NaN";
+	}
+	
+	/**
+	 * @return Nouveau dataframe contenant l'écart type pour chaque colonne
+	 * <br>Ecart type d'une colonne String => NaN
+	 * <br>Ecart type d'une colonne vide => null
+	 */
+	public Dataframe getSdEachColumn() {
+		Dataframe dataframe_sd = new Dataframe();
+		for (int i = 0; i < dataframe.size(); i++) {
+			Series<?> s = dataframe.get(i);
+			if (s.getSize() > 0 && (s.getElem(0) instanceof Double || s.getElem(0) instanceof Integer)) {
+				Series<Double> serie_sd = new Series<>();
+				serie_sd.setName(dataframe.get(i).getName());
+				serie_sd.getColumn().add( (double) getSdColumn(i) );
+				dataframe_sd.ajoutSeries(serie_sd);
+			} else if (s.getSize() > 0 && s.getElem(0) instanceof String) {
+				Series<String> serie_sd = new Series<>();
+				serie_sd.setName(dataframe.get(i).getName());
+				serie_sd.getColumn().add((String) getSdColumn(i));
+				dataframe_sd.ajoutSeries(serie_sd);
+			} else {
+				Series<String> serie_null = new Series<>();
+				serie_null.setName(dataframe.get(i).getName());
+				serie_null.getColumn().add("null");
+				dataframe_sd.ajoutSeries(serie_null);
+			}
+		}
+		return dataframe_sd;
+	}
+
+	/**
+	 * @param pourcentage de decoupage des colonnes du dataframe
+	 * <br> si pourcentage > 100 ou < 0 alors pourcentage sera automatiquement mis à 0
+	 * @return Nouveau dataframe ayant le double des colonnes initiales et contenant le pourcentage de valeurs (préalablement trié par ordre croissant) de chaque colonne en partant du début et de la fin
+	 * <br><u>Ex :</u> [[5,9,1,2,3,7,8,4,6,0]] avec pourcentage = 34% | <u>Retourne :</u> [[0,1,2], [7,8,9]]
+	 */
+	public Dataframe splitPercent_SortedData(double pourcentage) {
+		if(pourcentage < 0 || pourcentage > 100) //TODO Exception 
+			pourcentage = 0;
+		Dataframe dataframeSplited = new Dataframe();
+		for (int i = 0; i < dataframe.size(); i++) {
+			Series<?> s = dataframe.get(i);
+			//On trie par ordre croissant
+			List<Object> ssorted = s.getColumn().stream().sorted().collect(Collectors.toList());
+			//On creee 2 nouvelles listes
+			ArrayList<Object> sStart = new ArrayList<>();
+			ArrayList<Object> sEnd = new ArrayList<>();
+			//On recupere le nombre de valeurs qu'on devra copier
+			int limit = (int) Math.floor(ssorted.size() * (pourcentage/100));
+			//On copie les valeurs
+			for (int j = 0; j < limit; j++) {
+				sStart.add(ssorted.get(j));
+				sEnd.add(ssorted.get(ssorted.size()-limit+j));
+			}
+			//On ajoute les deux nouvelles Series
+			dataframeSplited.ajoutSeries((new Series<>(s.getName()+"_FIRST", sStart)));
+			dataframeSplited.ajoutSeries((new Series<>(s.getName()+"_LAST", sEnd)));
+		}
+		return dataframeSplited;
+	}
 
 	/**
 	 * @param arguments un tableau de donnees
 	 * @return void - initialise juste les dataframe
 	 *
 	 */
-    public void initialisation(String[][] arguments) {
-        dataframe = new ArrayList<>();
-        for (int i = 0; i < arguments[0].length; i++) {
-            String name = getName(arguments, i);
-            Series s = null;
-            switch (type(arguments[1][i])) {
-            case INTEGER:
-                s = new Series<Integer>();
-                break;
-            case STRING:
-                s = new Series<String>();
-                break;
-            case DOUBLE:
-                s = new Series<Double>();
-                break;
-            default:
-                System.err.println("LA COLONNE " + i + " CONTIENT UN TYPE INCONNU");
-                System.exit(0);
-            }
+  public void initialisation(String[][] arguments) {
+      dataframe = new ArrayList<>();
+      for (int i = 0; i < arguments[0].length; i++) {
+          String name = getName(arguments, i);
+          Series s = null;
+          switch (type(arguments[1][i])) {
+          case INTEGER:
+              s = new Series<Integer>();
+              break;
+          case STRING:
+              s = new Series<String>();
+              break;
+          case DOUBLE:
+              s = new Series<Double>();
+              break;
+          default:
+              System.err.println("LA COLONNE " + i + " CONTIENT UN TYPE INCONNU");
+              System.exit(0);
+          }
 
-            s.setName(name);
-            s = ajouterTout(s, arguments, i);
-            dataframe.add(s);
-        }
-    }
+          s.setName(name);
+          s = ajouterTout(s, arguments, i);
+          dataframe.add(s);
+      }
+  }
 
 	/**
 	 *
@@ -289,6 +548,12 @@ public class Dataframe {
 		return toRet;
 	}
 
+	/**
+	 * 
+	 * @param min -> ligne à partir de laquelle on doit afficher
+	 * @param max -> ligne à partir de laquelle on doit s'arrêter d'afficher
+	 * @return chaine de charactere à afficher
+	 */
 	private String printCore(int min, int max) {
 		String out = "";
 		for (int i = min; i < max; i++) {
@@ -304,20 +569,36 @@ public class Dataframe {
 		return out;
 	}
 
+	/**
+	 * @return chaine de charactere contenant l'ensemble du dataframe à afficher
+	 */
 	public String printDataframe() {
 		return printHeader() + printCore(0, getMaxSizeSeries());
 	}
 
+	/**
+	 * @param nb -> Nombre de ligne à afficher depuis le début
+	 * <br> Si nb > la taille max possible alors nb = taille max possible
+	 * @return chaine de charactere à afficher
+	 */
 	public String printDataframeFirstLines(int nb) {
 		int max = getMaxSizeSeries();
 		return printHeader() + printCore(0, nb > max ? max : nb);
 	}
 
+	/**
+	 * @param nb -> Nombre de ligne à afficher depuis la fin
+	 * <br> Si nb > la taille max possible alors nb = taille max possible
+	 * @return chaine de charactere à afficher
+	 */
 	public String printDataframeLastLines(int nb) {
 		int max = getMaxSizeSeries();
 		return printHeader() + printCore(nb < max ? max - nb : 0, max);
 	}
 
+	/**
+	 * @return chaine de charactere contenant l'entete du dataframe à afficher (nom de chaque colonne)
+	 */
 	private String printHeader() {
 		String out;
 		out = "Index\t\t";
@@ -496,7 +777,7 @@ public class Dataframe {
 		}
 		return new Dataframe(data);
 	}
-	
+
 	/**
 	 * @param nomColonne nom de la colonne que l'on veut selectionner
 	 * @param elem objet dont on veut selectionner la ligne
@@ -546,7 +827,7 @@ public class Dataframe {
 			return (Double)elem == (Double)o;
 		return false;
 	}
-
+  
 	/**
 	 *
 	 * @param PATH le chemin vers un fichier CSV
@@ -570,7 +851,6 @@ public class Dataframe {
                 sc.close();
                 throw new TooManyValueException();
             }
-
             line = sc.readLine();
         }
         sc.close();
@@ -581,7 +861,6 @@ public class Dataframe {
             }
         }
         return toRet;
-
     }
 
 	/**
