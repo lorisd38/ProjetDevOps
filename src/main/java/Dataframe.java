@@ -41,7 +41,7 @@ public class Dataframe {
 	 * @throws PandaNoData       tableau vide ou colonne vide
 	 * @throws PandaNotSupported type non supporte
 	 */
-	public Dataframe(Object[][] tableau) throws Exception {
+	public Dataframe(Object[][] tableau) throws PandaExceptions {
 		if (tableau == null || tableau.length == 0)
 			throw new PandaNoData();
 		this.dataframe = new ArrayList<>();
@@ -68,7 +68,6 @@ public class Dataframe {
 
 	/**
 	 * @param PATH le chemin vers un csv
-	 *
 	 */
 	public Dataframe(String PATH) throws Exception {
 		this.splitter = ";";
@@ -93,7 +92,7 @@ public class Dataframe {
 	 * @throws PandaNotSupported      type non supporte
 	 */
 	@SuppressWarnings("unchecked")
-	private void ajoutColonne(String type, Object[] c) throws Exception {
+	private void ajoutColonne(String type, Object[] c) throws PandaExceptions {
         switch (type) {
         case "String":
             Series<String> s = new Series<>();
@@ -177,6 +176,11 @@ public class Dataframe {
 		return dataframe;
 	}
 	
+	/**
+	 * @param name nom d'une colonne
+	 * @return indice de la colonne dont le nom est passe en parametre
+	 * @throws PandaNoData si le nom n'est pas contenu dans le dataframe 
+	 */
     private int getIndiceCol(String name) throws PandaNoData {
         int ind = 0;
         for (Series elem : dataframe) {
@@ -187,6 +191,9 @@ public class Dataframe {
         throw new PandaNoData();
     }
 
+	/**
+	 * @return le nombre maximal d'elements dans une colonne
+	 */
 	public int getMaxSizeSeries() {
 		int max = 0;
 		for (Series series : dataframe) {
@@ -200,7 +207,12 @@ public class Dataframe {
 		return liste[0][colonneActuelle];
 	}
 	
-    public GroupBy groupBy(String name) throws Exception {
+	/**
+     * @param name - le nom sur le quel les donnees seront groupee
+     * @return GroupBy - Un ensemble de dataframe groupe par name
+     * @throw PandaExceptions si le nom n'est pas bon 
+     */
+    public GroupBy groupBy(String name) throws PandaExceptions {
         GroupBy toRet = new GroupBy();
         int indiceCol = getIndiceCol(name);
         ArrayList<Object> ao = new ArrayList<Object>();
@@ -218,31 +230,31 @@ public class Dataframe {
 	 * @return void - initialise juste les dataframe
 	 *
 	 */
-	public void initialisation(String[][] arguments) {
-		dataframe = new ArrayList<>();
-		for (int i = 0; i < arguments.length; i++) {
-			String name = getName(arguments, i);
-			Series s = null;
-			switch (type(arguments[i])) {
-			case INTEGER:
-				s = new Series<Integer>();
-				break;
-			case STRING:
-				s = new Series<String>();
-				break;
-			case DOUBLE:
-				s = new Series<Double>();
-				break;
-			default:
-				System.err.println("LA COLONNE " + i + " CONTIENT UN TYPE INCONNU");
-				System.exit(0);
-			}
+    public void initialisation(String[][] arguments) {
+        dataframe = new ArrayList<>();
+        for (int i = 0; i < arguments[0].length; i++) {
+            String name = getName(arguments, i);
+            Series s = null;
+            switch (type(arguments[1][i])) {
+            case INTEGER:
+                s = new Series<Integer>();
+                break;
+            case STRING:
+                s = new Series<String>();
+                break;
+            case DOUBLE:
+                s = new Series<Double>();
+                break;
+            default:
+                System.err.println("LA COLONNE " + i + " CONTIENT UN TYPE INCONNU");
+                System.exit(0);
+            }
 
-			s.setName(name);
-			s = ajouterTout(s, arguments, i);
-			dataframe.add(s);
-		}
-	}
+            s.setName(name);
+            s = ajouterTout(s, arguments, i);
+            dataframe.add(s);
+        }
+    }
 
 	/**
 	 *
@@ -320,7 +332,7 @@ public class Dataframe {
 	 * @return un dataframe contenant la ligne passee en argument
 	 * @throws PandaOutOfBound indice trop grand ou trop petit
 	 */
-	public Dataframe selection(int ligne) throws Exception {
+	public Dataframe selection(int ligne) throws PandaExceptions {
 		if (ligne > dataframe.get(0).getSize() || ligne < 0)
 			throw new PandaOutOfBound();
 		Object[][] data = new Object[dataframe.size()][2];
@@ -338,7 +350,7 @@ public class Dataframe {
 	 * @return un dataframe contenant la colonne du nom passe en argument
 	 * @throws PandaNameNotFound nom non present dans le dataframe
 	 */
-	public Dataframe selectionColonne(String nom) throws Exception {
+	public Dataframe selectionColonne(String nom) throws PandaExceptions {
 		Object[][] data = null;
 		for (Series s : dataframe) {
 			if (s.getName() == nom) {
@@ -362,7 +374,7 @@ public class Dataframe {
 	 * @throws PandaNameNotFound nom non present dans le dataframe
 	 * @throws PandaNoData       liste vide ou nulle
 	 */
-	public Dataframe selectionColonnes(ArrayList<String> noms) throws Exception {
+	public Dataframe selectionColonnes(ArrayList<String> noms) throws PandaExceptions {
 		if (noms == null || noms.size() == 0)
 			throw new PandaNoData();
 		Object[][] data = null;
@@ -396,7 +408,7 @@ public class Dataframe {
 	 * @return l'element a l'emplacement donne
 	 * @throws PandaOutOfBound indice trop grand ou trop petit
 	 */
-	public Object selectionElement(int ligne, int colonne) throws Exception {
+	public Object selectionElement(int ligne, int colonne) throws PandaExceptions {
 		if (colonne >= dataframe.size() || colonne < 0)
 			throw new PandaOutOfBound();
 		if (ligne >= dataframe.get(colonne).getSize() || ligne < 0)
@@ -412,7 +424,7 @@ public class Dataframe {
 	 * @throws PandaNoData     liste vide ou nulle
 	 * @throws PandaOutOfBound indice trop grand ou trop petit
 	 */
-	public Dataframe selectionElements(ArrayList<Integer> ligne, ArrayList<Integer> colonne) throws Exception {
+	public Dataframe selectionElements(ArrayList<Integer> ligne, ArrayList<Integer> colonne) throws PandaExceptions {
 		if (ligne == null || ligne.size() == 0 || colonne == null || colonne.size() == 0)
 			throw new PandaNoData();
 		Object[][] data = new Object[colonne.size()][ligne.size() + 1];
@@ -440,7 +452,7 @@ public class Dataframe {
 	 * @throws PandaNoData     liste vide ou nulle
 	 * @throws PandaOutOfBound indice trop grand ou trop petit
 	 */
-	public Dataframe selectionLignes(ArrayList<Integer> lignes) throws Exception {
+	public Dataframe selectionLignes(ArrayList<Integer> lignes) throws PandaExceptions {
 		if (lignes == null || lignes.size() == 0)
 			throw new PandaNoData();
 		Object[][] data = new Object[dataframe.size()][lignes.size() + 1];
@@ -464,7 +476,7 @@ public class Dataframe {
 	 * @return un dataframe contenant les lignes a selectionner
 	 * @throws PandaNoData liste vide ou pas de la bonne taille
 	 */
-	public Dataframe selectionMasque(ArrayList<Boolean> masque) throws Exception {
+	public Dataframe selectionMasque(ArrayList<Boolean> masque) throws PandaExceptions {
 		if (masque == null || masque.size() != dataframe.get(0).getSize())
 			throw new PandaNoData();
 		ArrayList<ArrayList<Object>> l = new ArrayList<>();
@@ -485,16 +497,28 @@ public class Dataframe {
 		return new Dataframe(data);
 	}
 	
-	public Dataframe selectionParObjet(String nomColonne, Object elem) throws Exception {
+	/**
+	 * @param nomColonne nom de la colonne que l'on veut selectionner
+	 * @param elem objet dont on veut selectionner la ligne
+	 * @return un dataframe contenant les lignes correspondant a l'element passe en parametre
+	 * @throws PandaNameNotFound si le nom de colonne n'existe pas
+	 * @throws PandaNoData si elem n'existe pas dans la colonne nomColonne
+	 */
+	public Dataframe selectionParObjet(String nomColonne, Object elem) throws PandaExceptions {
 		for (Series s : dataframe) {
-			if (s.getName() == nomColonne) {
+			if (s.getName().equals(nomColonne))
 				return searchIndice(s, elem);
-			}
 		}
 		throw new PandaNameNotFound();
 	}
 	
-	private Dataframe searchIndice(Series s, Object elem) throws Exception {
+	/**
+	 * @param s une colonne du dataframe
+	 * @param elem l'element qu'on cherche dans la colonne
+	 * @return un dataframe dont on a selectionner les lignes correspondant a element
+	 * @throws PandaNoData si elem n'existe pas dans la colonne 
+	 */
+	private Dataframe searchIndice(Series s, Object elem) throws PandaExceptions {
 		ArrayList<Integer> l = new ArrayList<>();
 		int indice = 0;
 		for (Object o : s.getColumn()) {
@@ -506,9 +530,9 @@ public class Dataframe {
 	}
 	
 	/**
-	 * @param elem premier objet à comparer
-	 * @param o deuxième objet à comparer
-	 * @return true si ils sont égaux et de même type
+	 * @param elem premier objet a comparer
+	 * @param o deuxième objet a comparer
+	 * @return true si ils sont egaux et de meme type
 	 * </br> faux sinon
 	 */
 	private boolean estEgale(Object elem, Object o) {
@@ -533,38 +557,42 @@ public class Dataframe {
 	 *                                lecteur de fichier
 	 */
 	public String[][] toTab(String PATH) throws Exception {
-		String[][] tab = new String[PandaExceptions.MAX_VALUES][PandaExceptions.MAX_DATA];
-		BufferedReader sc = new BufferedReader(new FileReader(PATH));
-		int nbLine = 0;
-		String line = sc.readLine();
-		while (line != null) {
-			tab[nbLine++] = nextLine(line);
-			if (nbLine == PandaExceptions.MAX_VALUES) {
-				sc.close();
-				throw new TooManyValueException();
-			}
+        String[][] tab = new String[PandaExceptions.MAX_VALUES][PandaExceptions.MAX_DATA];
+        BufferedReader sc = new BufferedReader(new FileReader(PATH));
+        int nbLine = 1;
+        String line = sc.readLine();
+        tab[0] = nextLine(line);
+        line = sc.readLine();
+        int nbElem = tab[0].length;
+        while (line != null) {
+            tab[nbLine++] = nextLine(line);
+            if (nbLine == PandaExceptions.MAX_VALUES) {
+                sc.close();
+                throw new TooManyValueException();
+            }
 
-			line = sc.readLine();
-		}
-		sc.close();
+            line = sc.readLine();
+        }
+        sc.close();
+        String[][] toRet = new String[nbLine][nbElem];
+        for (int i = 0; i < nbLine; i++) {
+            for (int j = 0; j < nbElem; j++) {
+                toRet[i][j] = tab[i][j];
+            }
+        }
+        return toRet;
 
-		return tab;
-	}
+    }
 
 	/**
-	 *
 	 * @param listeObjet, une colonne du tableau
 	 * @return une chaine de caracteres correspondant au types de donnees
 	 */
-	public String type(String[] listeObjet) {
-		String valeur = listeObjet[0];
-		if (isInt(valeur))
-			return INTEGER;
-
-		if (isDouble(valeur))
-			return DOUBLE;
-
-		return STRING;
-
+	 public String type(String valeur) {
+	        if (isInt(valeur))
+	            return INTEGER;
+	        if (isDouble(valeur))
+	            return DOUBLE;
+	        return STRING;
 	}
 }
