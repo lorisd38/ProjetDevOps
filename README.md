@@ -16,7 +16,7 @@ Outil :<br>
  Plateforme de collaboration : ![GIT](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)<br>
  Plateforme de communication : ![SCORD](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)<br>
  Plateforme de deploiement : [![DOCKER](https://img.shields.io/badge/Docker-blue?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/repository/docker/loris38/devops)<br>
- Language utilisé : [![JAVA](https://img.shields.io/badge/Java%20SE%2014-orange?style=for-the-badge&logo=java&logoColor=white)](https://www.oracle.com/java/technologies/javase/jdk14-archive-downloads.html)
+ Language utilisé : [![JAVA](https://img.shields.io/badge/Java%20SE%2014-orange?style=for-the-badge&logo=java&logoColor=white)](https://www.oracle.com/java/technologies/javase/jdk14-archive-downloads.html)<br>
  Javadoc : [![JAVADOC](https://img.shields.io/badge/Java%20doc-grey?style=for-the-badge&logo=java&logoColor=white)](https://pixel38320.github.io/ProjetDevOps/doc/)
 
 Workflow :
