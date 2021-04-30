@@ -12,8 +12,9 @@ Les fonctionnalités ( tout est faisable pour un CSV et un tableau d'objet) :
  - Group by sur une colonne
 
 Outil :
- Plateforme de collaboration : ![GIT](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
- Plateforme de communication : ![SCORD](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)
+ Plateforme de collaboration : ![GIT](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)<br>
+ Plateforme de communication : ![SCORD](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)<br>
+ ![JAVA](https://forthebadge.com/images/badges/made-with-java.svg)
 
 Workflow :
  - 5 branches pour les 5 fonctionnalités (feature-<fonctionalité>)
@@ -21,12 +22,16 @@ Workflow :
  - Chacunes des parties gérée par un binome
  - Chaque membre du binome developpe une fonctionnalité et fait le test pour une autre
  - 2 autres branche Hotfix pour le debug lors de la fusion et Develop pour une version la plus avancée, verifie avant de push sur master, la branche publique
- - Le jeu de test a été lancé a chaque fois qu'une modification a été faite.
- - Pour hotfix et develop il a été automatiquement fait par le CI.
- - Le CI a pu lancer les tests grace au maven. 
- - Les tests ont été fait avec JUnint
+ - Le jeu de test a été lancé a chaque fois qu'une modification a été faite sur Hotfix et Develop grace au pipline CI.
+ - Le pipline CI a lancer une execution de test via maven. 
+ - Les tests ont été réalisé avec JUnint
 
-Docker :
-
+Fichier image du Docker :
+ - Se base sur l'image ubuntu:20.04
+ - Installe git, maven et java (jdk-14)
+ - Clone ce git
+ - Execute la commande de clean, test, compile et package de maven
+ - Prépare la commande d'execution (du .jar) du scénario dans notre class App.java
+ 
 FeedBack :
  - Projet très interessant
