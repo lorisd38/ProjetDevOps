@@ -290,7 +290,7 @@ public class Dataframe {
 			else if (s.getSize() > 0 && s.getElem(0) instanceof Integer)
 				max = (Integer) s.getElem(0);
 			else if (s.getSize() > 0 && s.getElem(0) instanceof String)
-				return "Nan";
+				return "NaN";
 			
 			for (int i = 0; i < s.getSize(); i++) {
 				if (s.getElem(i) instanceof Double)
@@ -346,7 +346,7 @@ public class Dataframe {
 			else if (s.getSize() > 0 && s.getElem(0) instanceof Integer)
 				min = (Integer) s.getElem(0);
 			else if (s.getSize() > 0 && s.getElem(0) instanceof String)
-				return "Nan";
+				return "NaN";
 			
 			for (int i = 0; i < s.getSize(); i++) {
 				if (s.getElem(i) instanceof Double)

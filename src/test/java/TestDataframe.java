@@ -604,6 +604,13 @@ public class TestDataframe {
 		Dataframe data1 = new Dataframe(tab1);
 		assertEquals(2.5, (double) data1.getMeanColumn(0), 0);
 	}
+	
+	@Test
+	public void testMeanColString() throws Exception {
+		Object[][] tab1 = { { "Tab1", "1", "2", "3", "4" } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getMeanColumn(0));
+	}
 
 	@Test
 	public void testMeanColZero() throws Exception {
@@ -628,11 +635,12 @@ public class TestDataframe {
 
 	@Test
 	public void testMeanEachCol() throws Exception {
-		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 } };
+		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 } , { "Tab4", "1", "2"} };
 		Dataframe data1 = new Dataframe(tab1);
 		ArrayList<Series> res = data1.getMeanEachColumn().getDataframe();
 		assertEquals(0.0, (double) res.get(0).getElem(0), 0);
 		assertEquals(45.4875, (double) res.get(1).getElem(0), 0.0001);
+		assertEquals("NaN", (String) res.get(2).getElem(0));
 	}
 
 	@Test
@@ -652,6 +660,13 @@ public class TestDataframe {
 		assertEquals(4.0, (double) data1.getMaxColumn(0), 0);
 	}
 
+	@Test
+	public void testMaxColString() throws Exception {
+		Object[][] tab1 = { { "Tab1", "1", "2", "3", "4" } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getMaxColumn(0));
+	}
+	
 	@Test
 	public void testMaxColZero() throws Exception {
 		Object[][] tab1 = { { "Tab1", 0, 0, 0, 0 } };
@@ -676,12 +691,13 @@ public class TestDataframe {
 	@Test
 	public void testMaxEachCol() throws Exception {
 		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 },
-				{ "Tab3", -0.5, -178.6, -1.65, -1.2 } };
+				{ "Tab3", -0.5, -178.6, -1.65, -1.2 }, { "Tab4", "1", "2"} };
 		Dataframe data1 = new Dataframe(tab1);
 		ArrayList<Series> res = data1.getMaxEachColumn().getDataframe();
 		assertEquals(2.0, (double) res.get(0).getElem(0), 0);
 		assertEquals(178.6, (double) res.get(1).getElem(0), 0);
 		assertEquals(-0.5, (double) res.get(2).getElem(0), 0);
+		assertEquals("NaN", (String) res.get(3).getElem(0));
 	}
 
 	@Test
@@ -699,6 +715,13 @@ public class TestDataframe {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 } };
 		Dataframe data1 = new Dataframe(tab1);
 		assertEquals(1.0, (double) data1.getMinColumn(0), 0);
+	}
+	
+	@Test
+	public void testMinColString() throws Exception {
+		Object[][] tab1 = { { "Tab1", "1", "2", "3", "4" } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getMinColumn(0));
 	}
 
 	@Test
@@ -725,12 +748,13 @@ public class TestDataframe {
 	@Test
 	public void testgetMinEachCol() throws Exception {
 		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 },
-				{ "Tab3", -0.5, -178.6, -1.65, -1.2 } };
+				{ "Tab3", -0.5, -178.6, -1.65, -1.2 }, { "Tab4", "1", "2"} };
 		Dataframe data1 = new Dataframe(tab1);
 		ArrayList<Series> res = data1.getMinEachColumn().getDataframe();
 		assertEquals(-2.0, (double) res.get(0).getElem(0), 0);
 		assertEquals(0.5, (double) res.get(1).getElem(0), 0);
 		assertEquals(-178.6, (double) res.get(2).getElem(0), 0);
+		assertEquals("NaN", (String) res.get(3).getElem(0));
 	}
 	
 	@Test
@@ -750,6 +774,13 @@ public class TestDataframe {
 		assertEquals(1.87, (double) data1.getSdColumn(0), 0);
 	}
 
+	@Test
+	public void testSdColString() throws Exception {
+		Object[][] tab1 = { { "Tab1", "1", "2", "3", "4" } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getSdColumn(0));
+	}
+	
 	@Test
 	public void testSdColZero() throws Exception {
 		Object[][] tab1 = { { "Tab1", 0, 0, 0, 0 } };
@@ -774,12 +805,13 @@ public class TestDataframe {
 	@Test
 	public void testgetSdEachCol() throws Exception {
 		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 },
-				{ "Tab3", -0.5, -178.6, -1.65, -1.2 } };
+				{ "Tab3", -0.5, -178.6, -1.65, -1.2 }, { "Tab4", "1", "2"} };
 		Dataframe data1 = new Dataframe(tab1);
 		ArrayList<Series> res = data1.getSdEachColumn().getDataframe();
 		assertEquals(2.45, (double) res.get(0).getElem(0), 0);
 		assertEquals(89.05, (double) res.get(1).getElem(0), 0);
 		assertEquals(153.71, (double) res.get(2).getElem(0), 0);
+		assertEquals("NaN", (String) res.get(3).getElem(0));
 	}
 	
 	@Test
