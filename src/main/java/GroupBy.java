@@ -14,4 +14,13 @@ public class GroupBy {
 	public ArrayList<Dataframe> getAll() {
 		return all;
 	}
+	
+	@Override
+	public String toString() {
+		String s = "";
+		for (Dataframe dataframe : all) {
+			s += dataframe.toString();
+		}
+		return s;
+	}
 }

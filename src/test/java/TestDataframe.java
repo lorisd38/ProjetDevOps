@@ -189,45 +189,45 @@ public class TestDataframe {
 	}
 
 	@Test
-	public void testprintDataframe() throws Exception {
+	public void testToString() throws Exception {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
 		Dataframe data = new Dataframe(tab1);
 		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
-					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframe());
+					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.toString());
 	}
 
 	@Test
-	public void testprintDataframeFirstLines() throws Exception {
+	public void testToStringFirstLines() throws Exception {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
 		Dataframe data = new Dataframe(tab1);
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(0));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.toStringFirstLines(0));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n", data.printDataframeFirstLines(1));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n", data.toStringFirstLines(1));
 
 		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n",
-				data.printDataframeFirstLines(2));
+				data.toStringFirstLines(2));
 
 		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
-				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeFirstLines(152));
+				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.toStringFirstLines(152));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(-1));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.toStringFirstLines(-1));
 	}
 
 	@Test
-	public void testprintDataframeLastLines() throws Exception {
+	public void testToStringLastLines() throws Exception {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
 		Dataframe data = new Dataframe(tab1);
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(0));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.toStringLastLines(0));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(1));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.toStringLastLines(1));
 
 		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n",
-				data.printDataframeLastLines(2));
+				data.toStringLastLines(2));
 
 		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
-				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(152));
+				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.toStringLastLines(152));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(-1));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.toStringLastLines(-1));
 	}
 
 	@Test
