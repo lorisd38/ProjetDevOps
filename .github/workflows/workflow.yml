@@ -32,6 +32,10 @@ jobs:
       # Runs a single command using the runners shell
       - name: Maven test
         run: mvn test
+        
+      # Runs a single command using the runners shell
+      - name: Maven site
+        run: mvn site
 
       # Publish the tests report
       - name: Publish Test Report
