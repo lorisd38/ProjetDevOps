@@ -74,7 +74,7 @@ public class TestDataframe {
 		Dataframe dataframe = new Dataframe();
 		assertEquals(dataframe.type("1"), d.INTEGER);
 		assertEquals(dataframe.type("listeString"), d.STRING);
-		assertEquals(dataframe.type("0,1"), d.DOUBLE);
+		assertEquals(dataframe.type("0.1"), d.DOUBLE);
 	}
 
 	@Test(expected = TooManyDataException.class)
@@ -172,7 +172,7 @@ public class TestDataframe {
 	public void testIsDouble() throws Exception {
 		String s = "0";
 		assertFalse(d.isDouble(s));
-		s = "0,2";
+		s = "0.2";
 		assertTrue(d.isDouble(s));
 		s = "BLABLA";
 		assertFalse(d.isDouble(s));
@@ -554,22 +554,22 @@ public class TestDataframe {
 		fw.close();
 		Dataframe d = new Dataframe(PATH);
 		Dataframe newData;
-		newData = d.selectionParObjet("VALUE1", "0");
+		newData = d.selectionParObjet("VALUE1", 0);
 		for (Series s : newData.getDataframe()) {
 			for (Object o : s.getColumn())
-				assertEquals("0", o);
+				assertEquals(0, o);
 			assertEquals(s.getSize(), 51 / 3);
 		}
-		newData = d.selectionParObjet("VALUE1", "1");
+		newData = d.selectionParObjet("VALUE1", 1);
 		for (Series s : newData.getDataframe()) {
 			for (Object o : s.getColumn()) {
-				assertEquals("1", o);
+				assertEquals(1, o);
 			}
 		}
-		newData = d.selectionParObjet("VALUE1", "2");
+		newData = d.selectionParObjet("VALUE1", 2);
 		for (Series s : newData.getDataframe()) {
 			for (Object o : s.getColumn()) {
-				assertEquals("2", o);
+				assertEquals(2, o);
 			}
 		}
 	}
