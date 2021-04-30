@@ -201,7 +201,7 @@ public class Dataframe {
 	/**
    * @param name - le nom sur le quel les donnees seront groupee
    * @return GroupBy - Un ensemble de dataframe groupe par name
-   * @throw PandaExceptions si le nom n'est pas bon 
+   * @throws PandaExceptions si le nom n'est pas bon 
    */
 	public GroupBy groupBy(String name) throws PandaExceptions {
       GroupBy toRet = new GroupBy();
@@ -281,9 +281,9 @@ public class Dataframe {
 	 * @return max de la colonne d'indice "indice"
 	 * <br> si indice > size => NaN
 	 */
-	public Object getMaxColumn(int index) {
-		if(index < dataframe.size()) {
-			Series<?> s = dataframe.get(index);
+	public Object getMaxColumn(int indice) {
+		if(indice < dataframe.size()) {
+			Series<?> s = dataframe.get(indice);
 			double max = 0;
 			if (s.getSize() > 0 && s.getElem(0) instanceof Double)
 				max = (Double) s.getElem(0);
@@ -337,9 +337,9 @@ public class Dataframe {
 	 * @return min de la colonne d'indice "indice"
 	 * <br> si indice > size => NaN
 	 */
-	public Object getMinColumn(int index) {
-		if(index < dataframe.size()) {
-			Series<?> s = dataframe.get(index);
+	public Object getMinColumn(int indice) {
+		if(indice < dataframe.size()) {
+			Series<?> s = dataframe.get(indice);
 			double min = 0;
 			if (s.getSize() > 0 && s.getElem(0) instanceof Double)
 				min = (Double) s.getElem(0);
@@ -393,11 +393,11 @@ public class Dataframe {
 	 * @return ecart type de la colonne d'indice "indice"
 	 * <br> si indice > size => NaN
 	 */
-	public Object getSdColumn(int index) {
-		if(index < dataframe.size()) {
-			Series<?> s = dataframe.get(index);
+	public Object getSdColumn(int indice) {
+		if(indice < dataframe.size()) {
+			Series<?> s = dataframe.get(indice);
 			if (s.getSize() > 0 && (s.getElem(0) instanceof Double || s.getElem(0) instanceof Integer)) {
-				double mean = (double) getMinColumn(index);
+				double mean = (double) getMinColumn(indice);
 				double standardDeviation  = 0;
 				for (int i = 0; i < s.getSize(); i++) {
 					if (s.getElem(i) instanceof Double)
@@ -444,10 +444,9 @@ public class Dataframe {
 	}
 
 	/**
-	 * @param pourcentage de decoupage des colonnes du dataframe
-	 * <br> si pourcentage > 100 ou < 0 alors pourcentage sera automatiquement mis à 0
-	 * @return Nouveau dataframe ayant le double des colonnes initiales et contenant le pourcentage de valeurs (préalablement trié par ordre croissant) de chaque colonne en partant du début et de la fin
-	 * <br><u>Ex :</u> [[5,9,1,2,3,7,8,4,6,0]] avec pourcentage = 34% | <u>Retourne :</u> [[0,1,2], [7,8,9]]
+	 * @param pourcentage de decoupage des colonnes du dataframe.
+	 * @return Nouveau dataframe ayant le double des colonnes initiales et contenant le pourcentage de valeurs (préalablement trié par ordre croissant) de chaque colonne en partant du début et de la fin.
+	 * Ex : [[5,9,1,2,3,7,8,4,6,0]] avec pourcentage = 34% | Retourne : [[0,1,2], [7,8,9]]
 	 */
 	public Dataframe splitPercent_SortedData(double pourcentage) {
 		if(pourcentage < 0 || pourcentage > 100) //TODO Exception 
@@ -476,8 +475,6 @@ public class Dataframe {
 
 	/**
 	 * @param arguments un tableau de donnees
-	 * @return void - initialise juste les dataframe
-	 *
 	 */
 	@SuppressWarnings("unchecked")
  	public void initialisation(String[][] arguments) {
@@ -830,7 +827,7 @@ public class Dataframe {
 	 * @param PATH le chemin vers un fichier CSV
 	 * @return le tableau de chaine de caractere correspondant aux valeurs dans le
 	 *         fichier
-	 * @throws TooManyValuesException si les colonnes sont trop grandes
+	 * @throws TooManyValueException si les colonnes sont trop grandes
 	 * @throws Exception              si le fichier n'existe pas, geree par le
 	 *                                lecteur de fichier
 	 */
@@ -861,7 +858,7 @@ public class Dataframe {
     }
 
 	/**
-	 * @param listeObjet, une colonne du tableau
+	 * @param valeur du tableau
 	 * @return une chaine de caracteres correspondant au types de donnees
 	 */
 	 public String type(String valeur) {
