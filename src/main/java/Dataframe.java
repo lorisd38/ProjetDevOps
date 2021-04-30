@@ -30,13 +30,13 @@ public class Dataframe {
 	// Separateur, afin de pouvoir lire tous les types de fichiers CSV
 	private String splitter = " ";
 
-	// Representation de la vigule pour split les doubles
-	private String VIRGULE = ",";
+	// Representation du point pour split les doubles
+	private String DOUBLE_SPLITTER = "[.]";
 
 	public Dataframe() {
 		this.splitter = ";";
 	}
-  
+
 	/**
 	 * @param tableau d'objets a deux dimensions
 	 * @throws PandaNoData       tableau vide ou colonne vide
@@ -203,7 +203,7 @@ public class Dataframe {
    * @return GroupBy - Un ensemble de dataframe groupe par name
    * @throw PandaExceptions si le nom n'est pas bon 
    */
-  public GroupBy groupBy(String name) throws PandaExceptions {
+	public GroupBy groupBy(String name) throws PandaExceptions {
       GroupBy toRet = new GroupBy();
       int indiceCol = getIndiceCol(name);
       ArrayList<Object> ao = new ArrayList<Object>();
@@ -214,7 +214,7 @@ public class Dataframe {
           }
       }
       return toRet;
-  }
+	}
 
   /**
 	 * @param indice de la colonne
@@ -479,7 +479,8 @@ public class Dataframe {
 	 * @return void - initialise juste les dataframe
 	 *
 	 */
-  public void initialisation(String[][] arguments) {
+	@SuppressWarnings("unchecked")
+ 	public void initialisation(String[][] arguments) {
       dataframe = new ArrayList<>();
       for (int i = 0; i < arguments[0].length; i++) {
           String name = getName(arguments, i);
@@ -487,12 +488,18 @@ public class Dataframe {
           switch (type(arguments[1][i])) {
           case INTEGER:
               s = new Series<Integer>();
+              for (int j = 1; j < arguments.length; j++)
+            	  s.add( Integer.valueOf(arguments[j][i]) );
               break;
           case STRING:
               s = new Series<String>();
+              for (int j = 1; j < arguments.length; j++)
+            	  s.add( arguments[j][i] );
               break;
           case DOUBLE:
               s = new Series<Double>();
+              for (int j = 1; j < arguments.length; j++)
+            	  s.add( Double.valueOf(arguments[j][i]) );
               break;
           default:
               System.err.println("LA COLONNE " + i + " CONTIENT UN TYPE INCONNU");
@@ -500,7 +507,7 @@ public class Dataframe {
           }
 
           s.setName(name);
-          s = ajouterTout(s, arguments, i);
+          //s = ajouterTout(s, arguments, i);
           dataframe.add(s);
       }
   }
@@ -511,8 +518,7 @@ public class Dataframe {
 	 * @return 1 si valeur est un double, 0 sinon
 	 */
 	public boolean isDouble(String valeur) {
-		String[] all = valeur.split(VIRGULE);
-
+		String[] all = valeur.split(DOUBLE_SPLITTER);
 		return all.length == 2 && isInt(all[0]) && isInt(all[1]);
 	}
 
@@ -544,7 +550,7 @@ public class Dataframe {
 	 * @param max -> ligne à partir de laquelle on doit s'arrêter d'afficher
 	 * @return chaine de charactere à afficher
 	 */
-	private String printCore(int min, int max) {
+	private String toStringCore(int min, int max) {
 		String out = "";
 		for (int i = min; i < max; i++) {
 			out += "[" + i + "]\t\t";
@@ -562,8 +568,9 @@ public class Dataframe {
 	/**
 	 * @return chaine de charactere contenant l'ensemble du dataframe à afficher
 	 */
-	public String printDataframe() {
-		return printHeader() + printCore(0, getMaxSizeSeries());
+	@Override
+	public String toString() {
+		return toStringHeader() + toStringCore(0, getMaxSizeSeries());
 	}
 
 	/**
@@ -571,9 +578,9 @@ public class Dataframe {
 	 * <br> Si nb > la taille max possible alors nb = taille max possible
 	 * @return chaine de charactere à afficher
 	 */
-	public String printDataframeFirstLines(int nb) {
+	public String toStringFirstLines(int nb) {
 		int max = getMaxSizeSeries();
-		return printHeader() + printCore(0, nb > max ? max : nb);
+		return toStringHeader() + toStringCore(0, nb > max ? max : nb);
 	}
 
 	/**
@@ -581,15 +588,15 @@ public class Dataframe {
 	 * <br> Si nb > la taille max possible alors nb = taille max possible
 	 * @return chaine de charactere à afficher
 	 */
-	public String printDataframeLastLines(int nb) {
+	public String toStringLastLines(int nb) {
 		int max = getMaxSizeSeries();
-		return printHeader() + printCore(nb < max ? max - nb : 0, max);
+		return toStringHeader() + toStringCore(nb < max ? max - nb : 0, max);
 	}
 
 	/**
 	 * @return chaine de charactere contenant l'entete du dataframe à afficher (nom de chaque colonne)
 	 */
-	private String printHeader() {
+	private String toStringHeader() {
 		String out;
 		out = "Index\t\t";
 		for (Series series : dataframe)
@@ -624,7 +631,7 @@ public class Dataframe {
 	public Dataframe selectionColonne(String nom) throws PandaExceptions {
 		Object[][] data = null;
 		for (Series s : dataframe) {
-			if (s.getName() == nom) {
+			if (s.getName().equals(nom)) {
 				data = new Object[1][s.getSize() + 1];
 				data[0][0] = s.getName();
 				int i = 1;
@@ -654,7 +661,7 @@ public class Dataframe {
 		for (String nom : noms) {
 			trouve = false;
 			for (Series s : dataframe) {
-				if (nom == s.getName()) {
+				if (s.getName().equals(nom)) {
 					trouve = true;
 					if (data == null)
 						data = new Object[noms.size()][s.getSize() + 1];

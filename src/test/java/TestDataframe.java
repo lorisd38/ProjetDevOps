@@ -74,7 +74,7 @@ public class TestDataframe {
 		Dataframe dataframe = new Dataframe();
 		assertEquals(dataframe.type("1"), d.INTEGER);
 		assertEquals(dataframe.type("listeString"), d.STRING);
-		assertEquals(dataframe.type("0,1"), d.DOUBLE);
+		assertEquals(dataframe.type("0.1"), d.DOUBLE);
 	}
 
 	@Test(expected = TooManyDataException.class)
@@ -172,7 +172,7 @@ public class TestDataframe {
 	public void testIsDouble() throws Exception {
 		String s = "0";
 		assertFalse(d.isDouble(s));
-		s = "0,2";
+		s = "0.2";
 		assertTrue(d.isDouble(s));
 		s = "BLABLA";
 		assertFalse(d.isDouble(s));
@@ -189,45 +189,45 @@ public class TestDataframe {
 	}
 
 	@Test
-	public void testprintDataframe() throws Exception {
+	public void testToString() throws Exception {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
 		Dataframe data = new Dataframe(tab1);
 		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
-					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframe());
+					+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.toString());
 	}
 
 	@Test
-	public void testprintDataframeFirstLines() throws Exception {
+	public void testToStringFirstLines() throws Exception {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
 		Dataframe data = new Dataframe(tab1);
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(0));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.toStringFirstLines(0));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n", data.printDataframeFirstLines(1));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n", data.toStringFirstLines(1));
 
 		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n",
-				data.printDataframeFirstLines(2));
+				data.toStringFirstLines(2));
 
 		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
-				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeFirstLines(152));
+				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.toStringFirstLines(152));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeFirstLines(-1));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.toStringFirstLines(-1));
 	}
 
 	@Test
-	public void testprintDataframeLastLines() throws Exception {
+	public void testToStringLastLines() throws Exception {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2", 2, 4, 5 } };
 		Dataframe data = new Dataframe(tab1);
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(0));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.toStringLastLines(0));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(1));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.toStringLastLines(1));
 
 		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n",
-				data.printDataframeLastLines(2));
+				data.toStringLastLines(2));
 
 		assertEquals("Index\t\tTab1\t\tTab2\t\t\n" + "[0]\t\t1\t\t2\t\t\n" + "[1]\t\t2\t\t4\t\t\n"
-				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.printDataframeLastLines(152));
+				+ "[2]\t\t3\t\t5\t\t\n" + "[3]\t\t4\t\t\t\t\n", data.toStringLastLines(152));
 
-		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.printDataframeLastLines(-1));
+		assertEquals("Index\t\tTab1\t\tTab2\t\t\n", data.toStringLastLines(-1));
 	}
 
 	@Test
@@ -554,22 +554,22 @@ public class TestDataframe {
 		fw.close();
 		Dataframe d = new Dataframe(PATH);
 		Dataframe newData;
-		newData = d.selectionParObjet("VALUE1", "0");
+		newData = d.selectionParObjet("VALUE1", 0);
 		for (Series s : newData.getDataframe()) {
 			for (Object o : s.getColumn())
-				assertEquals("0", o);
+				assertEquals(0, o);
 			assertEquals(s.getSize(), 51 / 3);
 		}
-		newData = d.selectionParObjet("VALUE1", "1");
+		newData = d.selectionParObjet("VALUE1", 1);
 		for (Series s : newData.getDataframe()) {
 			for (Object o : s.getColumn()) {
-				assertEquals("1", o);
+				assertEquals(1, o);
 			}
 		}
-		newData = d.selectionParObjet("VALUE1", "2");
+		newData = d.selectionParObjet("VALUE1", 2);
 		for (Series s : newData.getDataframe()) {
 			for (Object o : s.getColumn()) {
-				assertEquals("2", o);
+				assertEquals(2, o);
 			}
 		}
 	}
