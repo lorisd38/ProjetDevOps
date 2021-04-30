@@ -1,5 +1,5 @@
 Workflow : ![workflow](https://github.com/pixel38320/ProjetDevOps/actions/workflows/workflow.yml/badge.svg)
-
+Covering Codecov : [![codecov](https://codecov.io/gh/pixel38320/ProjetDevOps/branch/master/graph/badge.svg?token=DMHKXM5VIC)](https://codecov.io/gh/pixel38320/ProjetDevOps)
 
 # ProjetDevOps
 Les fonctionnalités ( tout est faisable pour un CSV et un tableau d'objet) :
