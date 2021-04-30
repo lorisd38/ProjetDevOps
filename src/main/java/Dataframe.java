@@ -75,16 +75,6 @@ public class Dataframe {
 		initialisation(toTab(PATH));
 	}
 
-	public void afficheDataframe() {
-		for (Series<?> s : dataframe) {
-			System.out.print(s.getName() + "\t");
-			for (Object o : s.getColumn())
-				System.out.print(o + "\t");
-			System.out.println();
-		}
-		System.out.println();
-	}
-
 	/**
 	 * @param type le type de la colonne,
 	 * @param c    un tableau d'objet a une dimension
