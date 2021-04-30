@@ -26,7 +26,6 @@ public class Series<E> {
 	}
 
 	public void ajouter(E toAdd) {
-
 		this.column.add(toAdd);
 
 	}
