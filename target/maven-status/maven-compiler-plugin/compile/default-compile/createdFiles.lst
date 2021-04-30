@@ -1,10 +1,12 @@
+GroupBy.class
 Series.class
 exception\TooManyDataException.class
 exception\PandaCannotInstanciate.class
 exception\PandaExceptions.class
-Dataframe.class
 exception\TooManyValueException.class
 exception\PandaNoData.class
+App.class
+exception\PandaNameNotFound.class
+Dataframe.class
 exception\PandaNotSupported.class
 exception\PandaOutOfBound.class
-exception\PandaNameNotFound.class
