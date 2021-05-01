@@ -10,3 +10,4 @@ exception\PandaNameNotFound.class
 Dataframe.class
 exception\PandaNotSupported.class
 exception\PandaOutOfBound.class
+exception\ExcludeFromJacocoGeneratedReport.class

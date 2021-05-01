@@ -145,20 +145,26 @@ public class TestDataframe {
 	}
 	
 	@Test(expected = PandaCannotInstanciate.class)
-	public void testDataframeTableauErreurType1() throws PandaExceptions {
+	public void testDataframeTableauErreurTypeInteger() throws PandaExceptions {
 		data[0][3] = 0.5;
 		new Dataframe(data);
 	}
 	
 	@Test(expected = PandaCannotInstanciate.class)
-	public void testDataframeTableauErreurType2() throws PandaExceptions {
+	public void testDataframeTableauErreurTypeString() throws PandaExceptions {
 		data[1][3] = 1;
 		new Dataframe(data);
 	}
 	
 	@Test(expected = PandaNotSupported.class)
-	public void testDataframeTableauErreurType3() throws PandaExceptions {
+	public void testDataframeTableauErreurTypeDoubleNull() throws PandaExceptions {
 		data[5][1] = null;
+		data[5][2] = (float) 1;
+		new Dataframe(data);
+	}
+	
+	@Test(expected = PandaCannotInstanciate.class)
+	public void testDataframeTableauErreurTypeDouble() throws PandaExceptions {
 		data[5][2] = (float) 1;
 		new Dataframe(data);
 	}

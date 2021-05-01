@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="92" failures="0" name="TestDataframe" time="0.353" errors="0" skipped="0">
+<testsuite tests="93" failures="0" name="TestDataframe" time="0.309" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="java.vm.version" value="15.0.2+7-27"/>
@@ -25,7 +25,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 10"/>
-    <property name="classworlds.conf" value="C:\Users\Loris\eclipse-workspace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf2057982333477505979.tmp"/>
+    <property name="classworlds.conf" value="C:\Users\Loris\eclipse-workspace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf11854291963554367646.tmp"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
     <property name="java.library.path" value="C:\Users\Loris\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_15.0.2.v20210201-0955\jre\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Users/Loris/.p2/pool/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_15.0.2.v20210201-0955/jre/bin/server;C:/Users/Loris/.p2/pool/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_15.0.2.v20210201-0955/jre/bin;C:\Program Files (x86)\Razer Chroma SDK\bin;C:\Program Files\Razer Chroma SDK\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Razer\ChromaBroadcast\bin;C:\Program Files\Razer\ChromaBroadcast\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Users\Loris\AppData\Local\Microsoft\WindowsApps;C:\WINDOWS\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Users\Loris\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\Loris\AppData\Local\Programs\Python\Python39\;C:\Users\Loris\AppData\Local\Microsoft\WindowsApps;C:\Users\Loris\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Loris\AppData\Local\GitHubDesktop\bin;C:\WINDOWS\System32;;."/>
     <property name="jdk.debug" value="release"/>
@@ -61,45 +61,43 @@
   <testcase classname="TestDataframe" name="testToStringFirstLines" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionColonneNomInconnu" time="0"/>
   <testcase classname="TestDataframe" name="testMeanColUpperIndex" time="0"/>
+  <testcase classname="TestDataframe" name="testDataframeTableauErreurTypeDoubleNull" time="0"/>
   <testcase classname="TestDataframe" name="testgetMinEachCol" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionElementsLigneNegatif" time="0"/>
-  <testcase classname="TestDataframe" name="testSelectionParObjetAllType" time="0.012"/>
+  <testcase classname="TestDataframe" name="testSelectionParObjetAllType" time="0.011"/>
   <testcase classname="TestDataframe" name="testMaxEachCol" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionElementColonneTropGrand" time="0"/>
-  <testcase classname="TestDataframe" name="testSelectionIndexNegatif" time="0"/>
+  <testcase classname="TestDataframe" name="testSelectionIndexNegatif" time="0.001"/>
   <testcase classname="TestDataframe" name="testMaxEachColVide" time="0"/>
-  <testcase classname="TestDataframe" name="testSelectionLignesListeVide" time="0.001"/>
+  <testcase classname="TestDataframe" name="testSelectionLignesListeVide" time="0"/>
   <testcase classname="TestDataframe" name="testAjout" time="0"/>
-  <testcase classname="TestDataframe" name="testIsInt" time="0"/>
-  <testcase classname="TestDataframe" name="testSdAll" time="0.001"/>
+  <testcase classname="TestDataframe" name="testIsInt" time="0.001"/>
+  <testcase classname="TestDataframe" name="testSdAll" time="0"/>
   <testcase classname="TestDataframe" name="testSdCol" time="0.001"/>
   <testcase classname="TestDataframe" name="testToTab" time="0.003"/>
-  <testcase classname="TestDataframe" name="testSelectionMasqueTailleDifferente" time="0.001"/>
-  <testcase classname="TestDataframe" name="testAjoutTropGrand" time="0.153"/>
-  <testcase classname="TestDataframe" name="testAjoutTropLarge" time="0.161"/>
-  <testcase classname="TestDataframe" name="testToString" time="0.001"/>
+  <testcase classname="TestDataframe" name="testSelectionMasqueTailleDifferente" time="0"/>
+  <testcase classname="TestDataframe" name="testAjoutTropGrand" time="0.102"/>
+  <testcase classname="TestDataframe" name="testAjoutTropLarge" time="0.173"/>
+  <testcase classname="TestDataframe" name="testToString" time="0"/>
   <testcase classname="TestDataframe" name="testSelection" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionElementLigneNegatif" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionLignesListeNulle" time="0"/>
   <testcase classname="TestDataframe" name="testDataframeTableauMauvaisType" time="0"/>
   <testcase classname="TestDataframe" name="testMeanEachColVide" time="0"/>
-  <testcase classname="TestDataframe" name="testMinEachColVide" time="0.001"/>
+  <testcase classname="TestDataframe" name="testMinEachColVide" time="0"/>
   <testcase classname="TestDataframe" name="testToStringLastLines" time="0"/>
   <testcase classname="TestDataframe" name="testGetName" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionElementColonneNegatif" time="0"/>
   <testcase classname="TestDataframe" name="testSdColString" time="0"/>
-  <testcase classname="TestDataframe" name="testMinColZero" time="0"/>
+  <testcase classname="TestDataframe" name="testMinColZero" time="0.001"/>
   <testcase classname="TestDataframe" name="testMeanColNeg" time="0"/>
-  <testcase classname="TestDataframe" name="testMaxColNeg" time="0.001"/>
+  <testcase classname="TestDataframe" name="testMaxColNeg" time="0"/>
   <testcase classname="TestDataframe" name="testgetMaxSizeSeries" time="0"/>
-  <testcase classname="TestDataframe" name="testDataframeTableauErreurType1" time="0"/>
-  <testcase classname="TestDataframe" name="testDataframeTableauErreurType2" time="0"/>
-  <testcase classname="TestDataframe" name="testDataframeTableauErreurType3" time="0.001"/>
   <testcase classname="TestDataframe" name="testSelectionElementsColonneNegatif" time="0"/>
-  <testcase classname="TestDataframe" name="testSdColZero" time="0"/>
+  <testcase classname="TestDataframe" name="testSdColZero" time="0.001"/>
   <testcase classname="TestDataframe" name="testSdColNeg" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionIndexTropGrand" time="0"/>
-  <testcase classname="TestDataframe" name="testGroupBy" time="0.002"/>
+  <testcase classname="TestDataframe" name="testGroupBy" time="0.001"/>
   <testcase classname="TestDataframe" name="testSelectionColonnes" time="0"/>
   <testcase classname="TestDataframe" name="testIsDouble" time="0"/>
   <testcase classname="TestDataframe" name="testGroupByWrongName" time="0"/>
@@ -112,7 +110,7 @@
   <testcase classname="TestDataframe" name="testMinColNeg" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionColonne" time="0"/>
   <testcase classname="TestDataframe" name="testMeanAll" time="0"/>
-  <testcase classname="TestDataframe" name="testMeanCol" time="0"/>
+  <testcase classname="TestDataframe" name="testMeanCol" time="0.001"/>
   <testcase classname="TestDataframe" name="testSelectionElements" time="0"/>
   <testcase classname="TestDataframe" name="testMeanColString" time="0"/>
   <testcase classname="TestDataframe" name="testMaxColString" time="0"/>
@@ -121,7 +119,7 @@
   <testcase classname="TestDataframe" name="testSelectionLignesIndexNegatif" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionParObjetNomInconnu" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionLignesIndexTropGrand" time="0"/>
-  <testcase classname="TestDataframe" name="testCreationDataframeCSVallType" time="0.002"/>
+  <testcase classname="TestDataframe" name="testCreationDataframeCSVallType" time="0.001"/>
   <testcase classname="TestDataframe" name="testSelectionElementsLigneNull" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionElementsLigneVide" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionMasqueNull" time="0"/>
@@ -130,6 +128,7 @@
   <testcase classname="TestDataframe" name="testDataframeTableauNull" time="0"/>
   <testcase classname="TestDataframe" name="testDataframeTableauVide" time="0"/>
   <testcase classname="TestDataframe" name="testgetSdEachCol" time="0.001"/>
+  <testcase classname="TestDataframe" name="testDataframeTableauErreurTypeInteger" time="0"/>
   <testcase classname="TestDataframe" name="testSplitSortedPercentHigherOfRange" time="0"/>
   <testcase classname="TestDataframe" name="testMaxColZero" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionColonnesNomInconnu" time="0"/>
@@ -137,14 +136,16 @@
   <testcase classname="TestDataframe" name="testSelectionColonnesListVide" time="0"/>
   <testcase classname="TestDataframe" name="testMinColUpperIndex" time="0"/>
   <testcase classname="TestDataframe" name="testMaxAll" time="0"/>
-  <testcase classname="TestDataframe" name="testMaxCol" time="0.001"/>
+  <testcase classname="TestDataframe" name="testMaxCol" time="0"/>
   <testcase classname="TestDataframe" name="testMinAll" time="0"/>
   <testcase classname="TestDataframe" name="testMinCol" time="0"/>
   <testcase classname="TestDataframe" name="testMeanEachCol" time="0"/>
+  <testcase classname="TestDataframe" name="testDataframeTableauErreurTypeDouble" time="0"/>
   <testcase classname="TestDataframe" name="testMaxColUpperIndex" time="0"/>
-  <testcase classname="TestDataframe" name="testSelectionParObjet" time="0.002"/>
+  <testcase classname="TestDataframe" name="testSelectionParObjet" time="0.003"/>
   <testcase classname="TestDataframe" name="testSdEachColVide" time="0"/>
   <testcase classname="TestDataframe" name="testDataframeTableauToutType" time="0"/>
+  <testcase classname="TestDataframe" name="testDataframeTableauErreurTypeString" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionLignes" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionMasque" time="0"/>
   <testcase classname="TestDataframe" name="testSelectionElement" time="0"/>
