@@ -1,7 +1,10 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import exception.ExcludeFromJacocoGeneratedReport;
+
 public class App {
+	@ExcludeFromJacocoGeneratedReport
 	public static void main(String[] args) throws Exception {
 		Object[][] data = { {"A", -15.35, 34.4, -45.9, 5.92, 7.3, 60.07, 117.5, -5.1 },
 				{"B", 12, 42, -51, 37, -435, 645},

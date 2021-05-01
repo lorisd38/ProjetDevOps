@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import exception.ExcludeFromJacocoGeneratedReport;
+
 public class GroupBy {
     private ArrayList<Dataframe> all;
 
@@ -16,6 +18,7 @@ public class GroupBy {
 	}
 	
 	@Override
+	@ExcludeFromJacocoGeneratedReport
 	public String toString() {
 		String s = "";
 		for (Dataframe dataframe : all) {
