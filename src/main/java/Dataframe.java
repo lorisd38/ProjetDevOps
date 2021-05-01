@@ -145,19 +145,6 @@ public class Dataframe {
             dataframe.add(sf);
         }
     }
-	/**
-	 * @param s         Le Series a mettre a jour,
-	 * @param arguments les valeurs
-	 * @param position  l'index de la colonne courante
-	 * @return Series Le Series est mit a jour avec la colonne ajoutee
-	 *
-	 */
-	@SuppressWarnings("unchecked")
-	public Series ajouterTout(Series s, String[][] arguments, int position) {
-		for (int i = 1; i < arguments.length; i++)
-			s.ajouter(arguments[i][position]);
-		return s;
-	}
 
 	/**
 	 * @return le dataframe
@@ -475,9 +462,10 @@ public class Dataframe {
 
 	/**
 	 * @param arguments un tableau de donnees
+	 * @throws PandaNotSupported 
 	 */
 	@SuppressWarnings("unchecked")
- 	public void initialisation(String[][] arguments) {
+ 	public void initialisation(String[][] arguments) throws PandaNotSupported   {
       dataframe = new ArrayList<>();
       for (int i = 0; i < arguments[0].length; i++) {
           String name = getName(arguments, i);
@@ -488,23 +476,19 @@ public class Dataframe {
               for (int j = 1; j < arguments.length; j++)
             	  s.add( Integer.valueOf(arguments[j][i]) );
               break;
-          case STRING:
-              s = new Series<String>();
-              for (int j = 1; j < arguments.length; j++)
-            	  s.add( arguments[j][i] );
-              break;
           case DOUBLE:
               s = new Series<Double>();
               for (int j = 1; j < arguments.length; j++)
             	  s.add( Double.valueOf(arguments[j][i]) );
               break;
-          default:
-              System.err.println("LA COLONNE " + i + " CONTIENT UN TYPE INCONNU");
-              System.exit(0);
+          default://STRING
+        	  s = new Series<String>();
+              for (int j = 1; j < arguments.length; j++)
+            	  s.add( arguments[j][i] );
+              break;
           }
 
           s.setName(name);
-          //s = ajouterTout(s, arguments, i);
           dataframe.add(s);
       }
   }
@@ -817,8 +801,10 @@ public class Dataframe {
 			return (int)elem == (int)o;
 		if (elem instanceof String && o instanceof String)
 			return elem.equals(o);
-		if (elem instanceof Double && o instanceof Double)
-			return (Double)elem == (Double)o;
+		if (elem instanceof Double && o instanceof Double) {
+			return elem.equals((Double)o);
+		}
+			
 		return false;
 	}
   
