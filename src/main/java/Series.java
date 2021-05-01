@@ -25,11 +25,6 @@ public class Series<E> {
 		this.column.add(elem);
 	}
 
-	public void ajouter(E toAdd) {
-		this.column.add(toAdd);
-
-	}
-
 	public ArrayList<E> getColumn() {
 		return this.column;
 	}
@@ -45,10 +40,6 @@ public class Series<E> {
 	public int getSize() {
 		return this.column.size();
 
-	}
-
-	public void setColumn(ArrayList<E> column) {
-		this.column = column;
 	}
 
 	public void setName(String name) {
