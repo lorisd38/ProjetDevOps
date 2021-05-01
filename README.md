@@ -6,7 +6,7 @@
 Les fonctionnalités ( tout est faisable pour un CSV ou un tableau d'objet ) :
  - Parser
  - Afficher le dataframe
- - Afficher les n premieres/dernieres lignes
+ - Afficher les n premières/dernières lignes
  - Selectionner un sous ensemble de lignes et colonnes
  - Selectionner les lignes avec le nom de la colonne et son contenu voulu
  - Statistique pour le dataframe 
@@ -22,19 +22,19 @@ Outil :<br>
 Workflow :
  - 5 branches pour les 5 fonctionnalités (feature-<fonctionalité>)
  - Division du travail en deux parties
- - Chacunes des parties gérée par un binome
- - Chaque membre du binome developpe une fonctionnalité et fait le test pour une autre
- - 2 autres branche Hotfix pour le debug lors de la fusion et Develop pour une version la plus avancée, verifie avant de push sur master, la branche publique
- - Le jeu de test a été lancé a chaque fois qu'une modification a été faite sur Hotfix et Develop grace au pipline CI.
- - Le pipline CI a lancer une execution de test via maven. 
- - Les tests ont été réalisé avec JUnint
+ - Chacune des parties gérée par un binôme
+ - Chaque membre du binôme développe une fonctionnalité et fait le test pour une autre
+ - 2 autres branches Hotfix pour le debug lors de la fusion et Develop pour la version la plus avancée, vérifie avant de push sur master, la branche publique
+ - Le jeu de test a été lancé à chaque fois qu'une modification a été faite sur Hotfix et Develop grâce au pipeline CI.
+ - Le pipeline CI a lancé une exécution de test via maven 
+ - Les tests ont été réalisés avec JUnit
 
 Fichier image du Docker :
  - Se base sur l'image ubuntu:20.04
  - Installe git, maven et java SE 14
  - Clone ce git
- - Execute la commande de clean, test, compile et package de maven
- - Prépare la commande d'execution (du .jar) du scénario dans notre class App.java
+ - Exécute la commande de clean, test, compile et package de maven
+ - Prépare la commande d'exécution (du .jar) du scénario dans notre class App.java
  
 FeedBack :
  - Projet très interessant
