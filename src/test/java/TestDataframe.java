@@ -10,9 +10,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import exception.PandaCannotInstanciate;
 import exception.PandaExceptions;
 import exception.PandaNameNotFound;
 import exception.PandaNoData;
+import exception.PandaNotSupported;
 import exception.PandaOutOfBound;
 import exception.TooManyDataException;
 import exception.TooManyValueException;
@@ -104,7 +106,63 @@ public class TestDataframe {
 			k++;
 		}
 	}
+	
+	@Test(expected = PandaNoData.class)
+	public void testDataframeTableauNull() throws PandaExceptions {
+		Object[][] tab = null;
+		new Dataframe(tab);
+	}
+	
+	@Test(expected = PandaNoData.class)
+	public void testDataframeTableauVide() throws PandaExceptions {
+		Object[][] tab = {{}, {}};
+		new Dataframe(tab);
+	}
+	
+	@Test(expected = PandaNotSupported.class)
+	public void testDataframeTableauMauvaisType() throws PandaExceptions {
+		Object[][] tab = {{"Tab1", 1.5f, 3.6f}};
+		new Dataframe(tab);
+	}
 
+	@Test
+	public void testDataframeTableauToutType() throws PandaExceptions {
+		data[0][1] = null;
+		data[1][1] = null;
+		data[5][1] = null;
+		data[5][2] = null;
+		Dataframe d = new Dataframe(data);
+		int k = 0, l;
+		for (Series s : d.getDataframe()) {
+			assertEquals(s.getName(), data[k][0]);
+			l = 1;
+			for (Object o : s.getColumn()) {
+				assertEquals(o, data[k][l]);
+				l++;
+			}
+			k++;
+		}
+	}
+	
+	@Test(expected = PandaCannotInstanciate.class)
+	public void testDataframeTableauErreurType1() throws PandaExceptions {
+		data[0][3] = 0.5;
+		new Dataframe(data);
+	}
+	
+	@Test(expected = PandaCannotInstanciate.class)
+	public void testDataframeTableauErreurType2() throws PandaExceptions {
+		data[1][3] = 1;
+		new Dataframe(data);
+	}
+	
+	@Test(expected = PandaNotSupported.class)
+	public void testDataframeTableauErreurType3() throws PandaExceptions {
+		data[5][1] = null;
+		data[5][2] = (float) 1;
+		new Dataframe(data);
+	}
+	
 	@Test
 	public void testgetMaxSizeSeries() throws PandaExceptions {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 }, { "Tab2" } };
@@ -167,7 +225,19 @@ public class TestDataframe {
 	   }
 	   assertEquals(nbLignes, nbLigne);
 	}
-
+	
+	@Test(expected = PandaExceptions.class)
+	public void testGroupByWrongName() throws Exception {
+	   for (int i = 1; i < nbLignes; i++) {
+	       if (i > 0 && i < 3) data[0][i] = 1;
+	       else if (i >= 3 && i < 5) data[0][i] = 20;
+	       else if (i >= 5 && i < 7) data[0][i] = 300;
+	       else if (i >= 7) data[0][i] = 20;
+	   }
+	   d = new Dataframe(data);
+	   d.groupBy("INCONNU");
+	}
+	
 	@Test
 	public void testIsDouble() throws Exception {
 		String s = "0";
@@ -573,7 +643,89 @@ public class TestDataframe {
 			}
 		}
 	}
-
+	
+	@Test(expected = PandaNameNotFound.class)
+	public void testSelectionParObjetNomInconnu() throws Exception {
+		d.selectionParObjet("Inconnu", 0);
+	}
+	
+	@Test
+	public void testSelectionParObjetAllType() throws Exception {
+		FileWriter fw = new FileWriter("src/test/resources/testType.csv");
+		fw.append("FILE;VALUE1;VALUE2\n");
+		for (int i = 0; i < 50; i++) {
+			fw.append(i % 3 + ";");
+			fw.append("txt;");
+			fw.append((i % 3) + 0.5 + ";");
+			fw.append("\n");
+		}
+		fw.close();
+		Dataframe d = new Dataframe("src/test/resources/testType.csv");
+		Dataframe newData;
+		newData = d.selectionParObjet("VALUE1", "txt");
+		int j = 0;
+		for (int i = 0; i < newData.getDataframe().size(); i++) {
+			Series s = newData.getDataframe().get(i);
+			if(i==0) {
+				for (Object o : s.getColumn()) {
+					assertEquals(j%3, o);
+					j++;
+				}
+			}
+			else if(i==1) {
+				for (Object o : s.getColumn()) {
+					assertEquals("txt", o);
+					j++;
+				}
+			}
+			else if(i==2) {
+				for (Object o : s.getColumn()) {
+					assertEquals((j%3) + 0.5, o);
+					j++;
+				}
+			}
+			j=0;
+		}
+		newData = d.selectionParObjet("VALUE2", 0.5);
+		j = 0;
+		for (int i = 0; i < newData.getDataframe().size(); i++) {
+			Series s = newData.getDataframe().get(i);
+			if(i==0) {
+				for (Object o : s.getColumn()) {
+					assertEquals(0, o);
+					j++;
+				}
+			}
+			else if(i==1) {
+				for (Object o : s.getColumn()) {
+					assertEquals("txt", o);
+					j++;
+				}
+			}
+			else if(i==2) {
+				for (Object o : s.getColumn()) {
+					assertEquals(0.5, o);
+					j++;
+				}
+			}
+			j=0;
+		}
+	}
+	
+	@Test
+	public void testCreationDataframeCSVallType() throws Exception {
+		FileWriter fw = new FileWriter("src/test/resources/testType.csv");
+		fw.append("FILE;VALUE1;VALUE2\n");
+		for (int i = 0; i < 50; i++) {
+			fw.append(i % 3 + ";");
+			fw.append("txt;");
+			fw.append((i % 3) + 0.5 + ";");
+			fw.append("\n");
+		}
+		fw.close();
+		new Dataframe("src/test/resources/testType.csv");
+	}
+	
 	@Test
 	public void testToTab() throws Exception {
 		Dataframe dataframe = new Dataframe();
@@ -604,6 +756,20 @@ public class TestDataframe {
 		Dataframe data1 = new Dataframe(tab1);
 		assertEquals(2.5, (double) data1.getMeanColumn(0), 0);
 	}
+	
+	@Test
+	public void testMeanColUpperIndex() throws Exception {
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getMeanColumn(100));
+	}
+	
+	@Test
+	public void testMeanColString() throws Exception {
+		Object[][] tab1 = { { "Tab1", "1", "2", "3", "4" } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getMeanColumn(0));
+	}
 
 	@Test
 	public void testMeanColZero() throws Exception {
@@ -628,11 +794,12 @@ public class TestDataframe {
 
 	@Test
 	public void testMeanEachCol() throws Exception {
-		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 } };
+		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 } , { "Tab4", "1", "2"} };
 		Dataframe data1 = new Dataframe(tab1);
 		ArrayList<Series> res = data1.getMeanEachColumn().getDataframe();
 		assertEquals(0.0, (double) res.get(0).getElem(0), 0);
 		assertEquals(45.4875, (double) res.get(1).getElem(0), 0.0001);
+		assertEquals("NaN", (String) res.get(2).getElem(0));
 	}
 
 	@Test
@@ -652,6 +819,20 @@ public class TestDataframe {
 		assertEquals(4.0, (double) data1.getMaxColumn(0), 0);
 	}
 
+	@Test
+	public void testMaxColUpperIndex() throws Exception {
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getMaxColumn(100));
+	}
+	
+	@Test
+	public void testMaxColString() throws Exception {
+		Object[][] tab1 = { { "Tab1", "1", "2", "3", "4" } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getMaxColumn(0));
+	}
+	
 	@Test
 	public void testMaxColZero() throws Exception {
 		Object[][] tab1 = { { "Tab1", 0, 0, 0, 0 } };
@@ -676,12 +857,13 @@ public class TestDataframe {
 	@Test
 	public void testMaxEachCol() throws Exception {
 		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 },
-				{ "Tab3", -0.5, -178.6, -1.65, -1.2 } };
+				{ "Tab3", -0.5, -178.6, -1.65, -1.2 }, { "Tab4", "1", "2"} };
 		Dataframe data1 = new Dataframe(tab1);
 		ArrayList<Series> res = data1.getMaxEachColumn().getDataframe();
 		assertEquals(2.0, (double) res.get(0).getElem(0), 0);
 		assertEquals(178.6, (double) res.get(1).getElem(0), 0);
 		assertEquals(-0.5, (double) res.get(2).getElem(0), 0);
+		assertEquals("NaN", (String) res.get(3).getElem(0));
 	}
 
 	@Test
@@ -699,6 +881,20 @@ public class TestDataframe {
 		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 } };
 		Dataframe data1 = new Dataframe(tab1);
 		assertEquals(1.0, (double) data1.getMinColumn(0), 0);
+	}
+	
+	@Test
+	public void testMinColUpperIndex() throws Exception {
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getMinColumn(100));
+	}
+	
+	@Test
+	public void testMinColString() throws Exception {
+		Object[][] tab1 = { { "Tab1", "1", "2", "3", "4" } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getMinColumn(0));
 	}
 
 	@Test
@@ -725,12 +921,13 @@ public class TestDataframe {
 	@Test
 	public void testgetMinEachCol() throws Exception {
 		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 },
-				{ "Tab3", -0.5, -178.6, -1.65, -1.2 } };
+				{ "Tab3", -0.5, -178.6, -1.65, -1.2 }, { "Tab4", "1", "2"} };
 		Dataframe data1 = new Dataframe(tab1);
 		ArrayList<Series> res = data1.getMinEachColumn().getDataframe();
 		assertEquals(-2.0, (double) res.get(0).getElem(0), 0);
 		assertEquals(0.5, (double) res.get(1).getElem(0), 0);
 		assertEquals(-178.6, (double) res.get(2).getElem(0), 0);
+		assertEquals("NaN", (String) res.get(3).getElem(0));
 	}
 	
 	@Test
@@ -750,6 +947,20 @@ public class TestDataframe {
 		assertEquals(1.87, (double) data1.getSdColumn(0), 0);
 	}
 
+	@Test
+	public void testSdColUpperIndex() throws Exception {
+		Object[][] tab1 = { { "Tab1", 1, 2, 3, 4 } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getSdColumn(100));
+	}
+	
+	@Test
+	public void testSdColString() throws Exception {
+		Object[][] tab1 = { { "Tab1", "1", "2", "3", "4" } };
+		Dataframe data1 = new Dataframe(tab1);
+		assertEquals("NaN", (String) data1.getSdColumn(0));
+	}
+	
 	@Test
 	public void testSdColZero() throws Exception {
 		Object[][] tab1 = { { "Tab1", 0, 0, 0, 0 } };
@@ -774,12 +985,13 @@ public class TestDataframe {
 	@Test
 	public void testgetSdEachCol() throws Exception {
 		Object[][] tab1 = { { "Tab1", -2, -1, 0, 1, 2 }, { "Tab2", 0.5, 178.6, 1.65, 1.2 },
-				{ "Tab3", -0.5, -178.6, -1.65, -1.2 } };
+				{ "Tab3", -0.5, -178.6, -1.65, -1.2 }, { "Tab4", "1", "2"} };
 		Dataframe data1 = new Dataframe(tab1);
 		ArrayList<Series> res = data1.getSdEachColumn().getDataframe();
 		assertEquals(2.45, (double) res.get(0).getElem(0), 0);
 		assertEquals(89.05, (double) res.get(1).getElem(0), 0);
 		assertEquals(153.71, (double) res.get(2).getElem(0), 0);
+		assertEquals("NaN", (String) res.get(3).getElem(0));
 	}
 	
 	@Test
@@ -788,5 +1000,38 @@ public class TestDataframe {
 		Dataframe data1 = new Dataframe(tab1);
 		ArrayList<Series> res = data1.getSdEachColumn().getDataframe();
 		assertEquals("null", res.get(0).getElem(0));
+	}
+
+	@Test
+	public void testSplitSortedPercent() throws Exception {
+		Object[][] tab1 = { { "Tab1", 5,9,1,2,3,7,8,4,6,0 } };
+		Dataframe data1 = new Dataframe(tab1);
+		Dataframe newData1 = data1.splitPercent_SortedData(34);
+		ArrayList<Series> res = data1.getDataframe();
+		ArrayList<Series> newRes = newData1.getDataframe();
+		assertEquals(res.get(0).getElem(9), newRes.get(0).getElem(0));
+		assertEquals(res.get(0).getElem(2), newRes.get(0).getElem(1));
+		assertEquals(res.get(0).getElem(3), newRes.get(0).getElem(2));
+		assertEquals(res.get(0).getElem(5), newRes.get(1).getElem(0));
+		assertEquals(res.get(0).getElem(6), newRes.get(1).getElem(1));
+		assertEquals(res.get(0).getElem(1), newRes.get(1).getElem(2));
+	}
+	
+	@Test
+	public void testSplitSortedPercentLowerOfRange() throws Exception {
+		Object[][] tab1 = { { "Tab1", 5,9,1,2,3,7,8,4,6,0 } };
+		Dataframe data1 = new Dataframe(tab1);
+		Dataframe newData1 = data1.splitPercent_SortedData(-8);
+		ArrayList<Series> newRes = newData1.getDataframe();
+		assertEquals(0, newRes.get(0).getSize());
+	}
+	
+	@Test
+	public void testSplitSortedPercentHigherOfRange() throws Exception {
+		Object[][] tab1 = { { "Tab1", 5,9,1,2,3,7,8,4,6,0 } };
+		Dataframe data1 = new Dataframe(tab1);
+		Dataframe newData1 = data1.splitPercent_SortedData(500);
+		ArrayList<Series> newRes = newData1.getDataframe();
+		assertEquals(0, newRes.get(0).getSize());
 	}
 }
